@@ -1,0 +1,26 @@
+{
+  "sidebar": {
+    "sections": {
+      "overview": "OVERVIEW",
+      "management": "MANAGEMENT",
+      "settings": "SETTINGS"
+    },
+    "items": {
+      "dashboard": "Dashboard",
+      "analytics": "Analytics",
+      "users": "Users",
+      "pricingPlans": "Pricing Plan",
+      "reports": "Reports",
+      "systemSettings": "System Settings",
+      "help": "Help"
+    },
+    "logout": "Logout",
+    "logoutConfirmTitle": "Confirm Logout",
+    "logoutConfirmMessage": "Are you sure you want to log out? You will be redirected to the login page.",
+    "cancelButton": "Cancel",
+    "confirmButton": "Logout"
+  },
+  "topbar": {
+    "welcome": "Welcome back to the admin panel"
+  }
+}

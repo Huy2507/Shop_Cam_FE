@@ -1,0 +1,86 @@
+{
+  "modal": {
+    "loading": "Loading...",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "search": {
+    "placeholder": "Search..."
+  },
+  "button": {
+    "add": "Add New",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View Details",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "filter": {
+    "allStatus": "All Status",
+    "allRoles": "All Roles",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Pending"
+    },
+    "role": {
+      "admin": "Admin",
+      "manager": "Manager",
+      "user": "User"
+    }
+  },
+  "tabs": {
+    "overview": "Overview",
+    "cards": "Business Cards",
+    "subscription": "Subscription",
+    "activities": "Activities",
+    "paymentHistory": "Payment History",
+    "general": "General",
+    "featureFlags": "Feature Flags",
+    "analytics": "Analytics",
+    "ui": "UI",
+    "integration": "Integration",
+    "qrTime": "QR/Time",
+    "other": "Other"
+  },
+  "table": {
+    "user": "User",
+    "role": "Role",
+    "status": "Status",
+    "revenue": "Revenue",
+    "orders": "Orders",
+    "joinDate": "Join Date",
+    "actions": "Actions"
+  },
+  "user": {
+    "details": {
+      "phone": "Phone",
+      "address": "Address",
+      "lastLogin": "Last Login",
+      "totalSpent": "Total Spent",
+      "favoriteProducts": "Favorite Products",
+      "createdBy": "Created By",
+      "notUpdated": "Not Updated",
+      "noLogin": "Not Logged In",
+      "noTransaction": "No Transactions",
+      "noFavorites": "No Favorite Products",
+      "system": "System"
+    }
+  },
+  "error": {
+    "404": {
+      "title": "404",
+      "subtitle": "Page Not Found",
+      "description": "The page you are looking for might have been moved, deleted, or never existed.",
+      "homeButton": "Back to Home"
+    },
+    "403": {
+      "title": "403",
+      "subtitle": "Access Denied",
+      "description": "You don't have permission to access this page. Please contact the administrator if you believe this is an error.",
+      "note": "Note",
+      "noteDescription": "If you believe you should have access, try logging in again or contact support.",
+      "loginButton": "Login Again"
+    }
+  }
+}

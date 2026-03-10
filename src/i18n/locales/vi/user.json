@@ -1,0 +1,187 @@
+{
+  "title": "Quản Lý Người Dùng",
+  "button": {
+    "addUser": "Thêm Người Dùng Mới",
+    "back": "Quay lại",
+    "edit": "Chỉnh sửa",
+    "ban": "Khóa người dùng"
+  },
+  "search": {
+    "placeholder": "Tìm kiếm theo tên, email hoặc số điện thoại..."
+  },
+  "filter": {
+    "placeholder": "Lọc theo giới tính",
+    "allGenders": "Tất cả giới tính",
+    "allActivities": "Tất cả hoạt động",
+    "allPlans": "Tất cả gói",
+    "male": "Nam",
+    "female": "Nữ"
+  },
+  "table": {
+    "user": "Người dùng",
+    "email": "Email",
+    "phone": "Số điện thoại",
+    "gender": "Giới tính",
+    "actions": "Thao tác",
+    "firstName": "Tên",
+    "lastName": "Họ",
+    "userName": "Tên đăng nhập",
+    "birth": "Ngày sinh",
+    "description": "Mô tả",
+    "totalUsers": "Tổng số người dùng: {{count}}",
+    "pageInfo": "Trang {{current}} / {{total}}",
+    "createdAt": "Ngày tạo",
+    "updatedAt": "Cập nhật lúc",
+    "updatedBy": "Cập nhật bởi",
+    "currentPlanName": "Gói hiện tại",
+    "companyName": "Công ty"
+  },
+  "pagination": {
+    "previous": "Trước",
+    "next": "Tiếp"
+  },
+  "actions": {
+    "view": "Xem thông tin",
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "back": "Quay lại trang quản lý người dùng",
+    "ban": "Khóa người dùng",
+    "unban": "Mở khóa người dùng",
+    "processing": "Đang xử lý...",
+    "banSuccess": "Đã khóa người dùng thành công",
+    "unbanSuccess": "Đã mở khóa người dùng thành công",
+    "banError": "Không thể thay đổi trạng thái người dùng",
+    "confirmBanTitle": "Xác nhận khóa người dùng",
+    "confirmBanMessage": "Bạn có chắc chắn muốn khóa người dùng {{name}}? Hành động này sẽ ngăn họ truy cập vào tài khoản.",
+    "confirmUnbanTitle": "Xác nhận mở khóa người dùng",
+    "confirmUnbanMessage": "Bạn có chắc chắn muốn mở khóa người dùng {{name}}? Hành động này sẽ khôi phục quyền truy cập tài khoản của họ.",
+    "deleteConfirm": {
+      "title": "Xóa người dùng",
+      "message": "Bạn có chắc chắn muốn xóa người dùng này? Hành động này không thể hoàn tác.",
+      "confirm": "Xóa",
+      "cancel": "Hủy"
+    }
+  },
+  "status": {
+    "active": "Đang hoạt động",
+    "inactive": "Không hoạt động",
+    "pending": "Đang chờ"
+  },
+  "errors": {
+    "fetchFailed": "Không thể tải danh sách người dùng. Vui lòng thử lại.",
+    "deleteFailed": "Không thể xóa người dùng. Vui lòng thử lại.",
+    "updateFailed": "Không thể cập nhật thông tin người dùng. Vui lòng thử lại.",
+    "createFailed": "Không thể tạo người dùng mới. Vui lòng thử lại.",
+    "userNotFound": "Không tìm thấy người dùng"
+  },
+  "details": {
+    "title": "Chi tiết người dùng",
+    "personalInfo": "Thông tin cá nhân",
+    "fullName": "Họ và tên",
+    "email": "Email",
+    "phone": "Số điện thoại",
+    "gender": "Giới tính",
+    "birth": "Ngày sinh",
+    "description": "Mô tả",
+    "createdAt": "Ngày tạo",
+    "lastActivity": "Hoạt động cuối",
+    "lastLogin": "Đăng nhập cuối",
+    "status": "Trạng thái",
+    "id": "Mã người dùng"
+  },
+  "cards": {
+    "title": "Danh thiếp",
+    "main": "Thẻ chính",
+    "views": "lượt xem",
+    "createdDate": "Ngày tạo",
+    "jobTitle": "Chức vụ",
+    "company": "Công ty",
+    "contact": "Liên hệ",
+    "status": {
+      "fullAccess": "Truy cập đầy đủ",
+      "pendingDeletion": "Đang chờ xóa"
+    },
+    "noCardsFound": "Không tìm thấy danh thiếp nào"
+  },
+  "stats": {
+    "title": "Thống kê",
+    "totalCards": "Tổng số danh thiếp",
+    "totalViews": "Tổng lượt xem thẻ",
+    "monthlyViews": "Lượt xem thẻ tháng này",
+    "totalPaid": "Tổng số tiền đã thanh toán",
+    "currency": "VND"
+  },
+  "subscription": {
+    "title": "Chi tiết gói đăng ký hiện tại",
+    "plan": "Gói hiện tại",
+    "status": "Trạng thái",
+    "startDate": "Ngày bắt đầu",
+    "endDate": "Ngày kết thúc",
+    "paymentMethod": "Phương thức thanh toán",
+    "tier": "Cấp độ",
+    "type": "Loại gói",
+    "description": "Mô tả"
+  },
+  "activities": {
+    "title": "Hoạt động gần đây",
+    "noActivities": "Không có hoạt động nào",
+    "logs": "Nhật ký hoạt động",
+    "noLogs": "Không có nhật ký hoạt động nào",
+    "actions": {
+      "login": "Đăng nhập",
+      "logout": "Đăng xuất",
+      "tokenRefresh": "Làm mới token",
+      "create": "Tạo danh thiếp",
+      "clone": "Sao chép danh thiếp",
+      "update": "Cập nhật danh thiếp",
+      "delete": "Xóa danh thiếp",
+      "uploadAvatar": "Tải lên ảnh đại diện",
+      "updateProfile": "Cập nhật hồ sơ",
+      "changePassword": "Đổi mật khẩu",
+      "upgradeSubscription": "Nâng cấp gói đăng ký",
+      "other": "Hoạt động khác"
+    }
+  },
+  "paymentHistory": {
+    "title": "Lịch sử thanh toán",
+    "table": {
+      "orderCode": "Mã đơn hàng",
+      "action": "Hành động",
+      "amount": "Số tiền",
+      "method": "Phương thức",
+      "status": "Trạng thái",
+      "createdAt": "Ngày tạo",
+      "id": "ID",
+      "userId": "ID người dùng",
+      "email": "Email",
+      "description": "Mô tả",
+      "planName": "Tên gói",
+      "planType": "Loại gói",
+      "paidAt": "Ngày thanh toán",
+      "transactionId": "ID giao dịch",
+      "transactionDateTime": "Thời gian giao dịch",
+      "counterAccountName": "Tên tài khoản đối ứng",
+      "counterAccountNumber": "Số tài khoản đối ứng",
+      "counterAccountBankName": "Tên ngân hàng đối ứng",
+      "bankShortName": "Tên viết tắt ngân hàng"
+    },
+    "filter": {
+      "allStatuses": "Tất cả trạng thái",
+      "paid": "Đã thanh toán",
+      "pending": "Đang chờ",
+      "cancelled": "Đã hủy",
+      "failed": "Bị lỗi",
+      "allMethods": "Tất cả phương thức",
+      "statusPlaceholder": "Lọc theo trạng thái",
+      "methodPlaceholder": "Lọc theo phương thức"
+    },
+    "search": {
+      "placeholder": "Tìm kiếm theo mã đơn hàng, ID giao dịch, Số tài khoản, Ngân hàng"
+    },
+    "errors": {
+      "fetchFailed": "Không thể tải lịch sử thanh toán",
+      "loadError": "Lỗi khi tải lịch sử thanh toán"
+    },
+    "noData": "Không tìm thấy lịch sử thanh toán nào"
+  }
+}

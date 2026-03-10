@@ -1,0 +1,26 @@
+{
+  "sidebar": {
+    "sections": {
+      "overview": "TỔNG QUAN",
+      "management": "QUẢN LÝ",
+      "settings": "CÀI ĐẶT"
+    },
+    "items": {
+      "dashboard": "Dashboard",
+      "analytics": "Phân tích",
+      "users": "Người dùng",
+      "pricingPlans": "Gói đăng ký",
+      "reports": "Báo cáo",
+      "systemSettings": "Cài đặt hệ thống",
+      "help": "Trợ giúp"
+    },
+    "logout": "Đăng xuất",
+    "logoutConfirmTitle": "Xác nhận đăng xuất",
+    "logoutConfirmMessage": "Bạn có chắc chắn muốn đăng xuất? Bạn sẽ được chuyển hướng đến trang đăng nhập.",
+    "cancelButton": "Hủy",
+    "confirmButton": "Đăng xuất"
+  },
+  "topbar": {
+    "welcome": "Chào mừng bạn quay trở lại với trang quản trị"
+  }
+}

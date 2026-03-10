@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/Logo.png" />
+    <title>Shop Cam</title>
+    <script>
+      // Immediately invoked function to set dark mode
+      (function () {
+        const darkMode = localStorage.getItem("darkMode") === "true";
+        if (darkMode) {
+          document.documentElement.classList.add("dark");
+        }
+        // Prevent flash of unstyled content
+        document.documentElement.style.visibility = "visible";
+      })();
+    </script>
+    <style>
+      /* Prevent flash of unstyled content */
+      html {
+        visibility: hidden;
+      }
+
+      html.dark {
+        color-scheme: dark;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

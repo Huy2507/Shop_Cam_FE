@@ -1,0 +1,187 @@
+{
+  "title": "Users Management",
+  "button": {
+    "addUser": "Add New User",
+    "back": "Back",
+    "edit": "Edit",
+    "ban": "Ban User"
+  },
+  "search": {
+    "placeholder": "Search users by name, email or phone..."
+  },
+  "filter": {
+    "placeholder": "Filter by gender",
+    "allGenders": "All Genders",
+    "allPlans": "All Plans",
+    "allActivities": "All Activities",
+    "male": "Male",
+    "female": "Female"
+  },
+  "table": {
+    "user": "User",
+    "email": "Email",
+    "phone": "Phone",
+    "gender": "Gender",
+    "actions": "Actions",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "userName": "Username",
+    "birth": "Date of Birth",
+    "description": "Description",
+    "totalUsers": "Total Users: {{count}}",
+    "pageInfo": "Page {{current}} of {{total}}",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "updatedBy": "Updated By",
+    "currentPlanName": "Current Plan",
+    "companyName": "Company"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "actions": {
+    "view": "View User",
+    "edit": "Edit User",
+    "delete": "Delete User",
+    "back": "Back To User Management",
+    "ban": "Ban User",
+    "unban": "Unban User",
+    "processing": "Processing...",
+    "banSuccess": "User has been banned successfully",
+    "unbanSuccess": "User has been unbanned successfully",
+    "banError": "Failed to change user status",
+    "confirmBanTitle": "Confirm Ban User",
+    "confirmBanMessage": "Are you sure you want to ban user {{name}}? This will prevent them from accessing their account.",
+    "confirmUnbanTitle": "Confirm Unban User",
+    "confirmUnbanMessage": "Are you sure you want to unban user {{name}}? This will restore their account access.",
+    "deleteConfirm": {
+      "title": "Delete User",
+      "message": "Are you sure you want to delete this user? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    }
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending"
+  },
+  "errors": {
+    "fetchFailed": "Failed to fetch users. Please try again.",
+    "deleteFailed": "Failed to delete user. Please try again.",
+    "updateFailed": "Failed to update user. Please try again.",
+    "createFailed": "Failed to create user. Please try again.",
+    "userNotFound": "User not found"
+  },
+  "details": {
+    "title": "User Details",
+    "personalInfo": "Personal Information",
+    "fullName": "Full Name",
+    "email": "Email",
+    "phone": "Phone",
+    "gender": "Gender",
+    "birth": "Date of Birth",
+    "description": "Description",
+    "createdAt": "Created At",
+    "lastActivity": "Last Activity",
+    "lastLogin": "Last Login",
+    "status": "Status",
+    "id": "User ID"
+  },
+  "cards": {
+    "title": "Business Cards",
+    "main": "Main Card",
+    "views": "views",
+    "createdDate": "Created",
+    "jobTitle": "Job Title",
+    "company": "Company",
+    "contact": "Contact",
+    "status": {
+      "fullAccess": "Full Access",
+      "pendingDeletion": "Pending Deletion"
+    },
+    "noCardsFound": "No business cards found"
+  },
+  "stats": {
+    "title": "Statistics",
+    "totalCards": "Total Business Cards",
+    "totalViews": "Total Card Views",
+    "monthlyViews": "Monthly Card Views",
+    "totalPaid": "Total Amount Paid",
+    "currency": "VND"
+  },
+  "subscription": {
+    "title": "Current Subscription Details",
+    "plan": "Current Plan",
+    "status": "Status",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "paymentMethod": "Payment Method",
+    "tier": "Tier",
+    "type": "Type",
+    "description": "Description"
+  },
+  "activities": {
+    "title": "Recent Activities",
+    "noActivities": "No recent activities",
+    "logs": "Activity Logs",
+    "noLogs": "No activity logs found",
+    "actions": {
+      "login": "User Login",
+      "logout": "User Logout",
+      "tokenRefresh": "Token Refresh",
+      "create": "Create Card",
+      "clone": "Clone Card",
+      "update": "Update Card",
+      "delete": "Delete Card",
+      "uploadAvatar": "Upload Avatar",
+      "updateProfile": "Update Profile",
+      "changePassword": "Change Password",
+      "upgradeSubscription": "Upgrade Subscription",
+      "other": "Other Activity"
+    }
+  },
+  "paymentHistory": {
+    "title": "Payment History",
+    "table": {
+      "orderCode": "Order Code",
+      "action": "Action",
+      "amount": "Amount",
+      "method": "Method",
+      "status": "Status",
+      "createdAt": "Created At",
+      "id": "ID",
+      "userId": "User ID",
+      "email": "Email",
+      "description": "Description",
+      "planName": "Plan Name",
+      "planType": "Plan Type",
+      "paidAt": "Paid At",
+      "transactionId": "Transaction ID",
+      "transactionDateTime": "Transaction Date/Time",
+      "counterAccountName": "Counter Account Name",
+      "counterAccountNumber": "Counter Account Number",
+      "counterAccountBankName": "Counter Account Bank Name",
+      "bankShortName": "Bank Short Name"
+    },
+    "filter": {
+      "allStatuses": "All Statuses",
+      "paid": "Paid",
+      "pending": "Pending",
+      "cancelled": "Cancelled",
+      "failed": "Failed",
+      "allMethods": "All Methods",
+      "statusPlaceholder": "Filter by Status",
+      "methodPlaceholder": "Filter by Method"
+    },
+    "search": {
+      "placeholder": "Search by Order Code, Transaction ID, Account Number, Account Name, Bank Name"
+    },
+    "errors": {
+      "fetchFailed": "Failed to fetch payment histories",
+      "loadError": "Error loading payment histories"
+    },
+    "noData": "No payment history found"
+  }
+}

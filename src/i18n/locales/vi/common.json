@@ -1,0 +1,86 @@
+{
+  "modal": {
+    "loading": "Đang tải...",
+    "confirm": "Xác nhận",
+    "cancel": "Hủy"
+  },
+  "search": {
+    "placeholder": "Tìm kiếm..."
+  },
+  "button": {
+    "add": "Thêm mới",
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "view": "Xem chi tiết",
+    "save": "Lưu",
+    "cancel": "Hủy"
+  },
+  "filter": {
+    "allStatus": "Tất cả trạng thái",
+    "allRoles": "Tất cả vai trò",
+    "status": {
+      "active": "Hoạt động",
+      "inactive": "Không hoạt động",
+      "pending": "Chờ duyệt"
+    },
+    "role": {
+      "admin": "Admin",
+      "manager": "Manager",
+      "user": "User"
+    }
+  },
+  "tabs": {
+    "overview": "Tổng quan",
+    "cards": "Danh thiếp",
+    "subscription": "Gói đăng ký",
+    "activities": "Hoạt động",
+    "paymentHistory": "Lịch sử thanh toán",
+    "general": "Chung",
+    "featureFlags": "Tính năng",
+    "analytics": "Thống kê",
+    "ui": "Giao diện",
+    "integration": "Tích hợp",
+    "qrTime": "QR/Thời gian",
+    "other": "Khác"
+  },
+  "table": {
+    "user": "Người dùng",
+    "role": "Vai trò",
+    "status": "Trạng thái",
+    "revenue": "Doanh thu",
+    "orders": "Đơn hàng",
+    "joinDate": "Ngày tham gia",
+    "actions": "Thao tác"
+  },
+  "user": {
+    "details": {
+      "phone": "Số điện thoại",
+      "address": "Địa chỉ",
+      "lastLogin": "Đăng nhập cuối",
+      "totalSpent": "Tổng chi tiêu",
+      "favoriteProducts": "Sản phẩm yêu thích",
+      "createdBy": "Tạo bởi",
+      "notUpdated": "Chưa cập nhật",
+      "noLogin": "Chưa đăng nhập",
+      "noTransaction": "Chưa có giao dịch",
+      "noFavorites": "Chưa có sản phẩm yêu thích",
+      "system": "Hệ thống"
+    }
+  },
+  "error": {
+    "404": {
+      "title": "404",
+      "subtitle": "Trang không tồn tại",
+      "description": "Trang bạn đang tìm kiếm có thể đã được di chuyển, xóa hoặc không bao giờ tồn tại.",
+      "homeButton": "Về trang chủ"
+    },
+    "403": {
+      "title": "403",
+      "subtitle": "Truy cập bị từ chối",
+      "description": "Bạn không có quyền truy cập vào trang này. Vui lòng liên hệ quản trị viên nếu bạn cho rằng đây là lỗi.",
+      "note": "Lưu ý",
+      "noteDescription": "Nếu bạn tin rằng bạn có quyền truy cập, hãy thử đăng nhập lại hoặc liên hệ hỗ trợ.",
+      "loginButton": "Đăng nhập lại"
+    }
+  }
+}
