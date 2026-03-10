@@ -1,10 +1,18 @@
 import { Menu, Phone, Search, ShoppingBag } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
+  const location = useLocation();
+  const isHome = location.pathname === "/";
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [categoriesOpen, setCategoriesOpen] = useState(isHome);
+
+  useEffect(() => {
+    // Trên màn hình Trang chủ, danh mục luôn mở mặc định khi load.
+    setCategoriesOpen(isHome);
+  }, [isHome]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white shadow-sm relative">
@@ -55,16 +63,25 @@ const Header = () => {
 
       {/* Navigation */}
       <nav className="mx-auto max-w-7xl px-4">
-        <div className="flex items-center gap-6 py-3">
-          <button
-            type="button"
-            onClick={() => setCategoriesOpen(!categoriesOpen)}
-            className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-red-700"
-          >
-            <Menu className="h-5 w-5" />
-            <span>DANH MỤC SẢN PHẨM</span>
-          </button>
+        <div
+          className="flex items-center gap-6 py-3"
+          onMouseEnter={() => {
+            if (!isHome) setCategoriesOpen(true);
+          }}
+        >
+          <CategoryMenu
+            isHome={isHome}
+            open={categoriesOpen}
+            onOpenChange={setCategoriesOpen}
+          />
+
           <div className="flex gap-6">
+            <Link
+              to="/gioi-thieu"
+              className="text-sm font-medium text-slate-700 hover:text-red-600"
+            >
+              Giới thiệu
+            </Link>
             <Link
               to="/products"
               className="text-sm font-medium text-slate-700 hover:text-red-600"
@@ -88,38 +105,83 @@ const Header = () => {
             </Link>
           </div>
         </div>
-
-        {/* Categories dropdown */}
-        {categoriesOpen && (
-          <div className="absolute left-0 right-0 top-full z-50 mx-auto mt-0 max-w-7xl rounded-b-lg border border-t-0 border-slate-200 bg-white shadow-lg">
-            <ul className="py-2">
-              {[
-                "Đầu ghi Camera",
-                "Phụ Kiện Camera",
-                "Thiết bị chống trộm",
-                "Máy Chấm Công",
-                "Thiết Bị Mạng",
-                "Thiết Bị Gia Đình",
-                "Camera Yoosee",
-                "Trọn Bộ Camera Hikvision IP",
-                "Trọn Bộ Camera Hikvision HDTVI",
-              ].map((cat) => (
-                <li key={cat}>
-                  <Link
-                    to={`/products?category=${encodeURIComponent(cat)}`}
-                    className="flex items-center justify-between px-4 py-2.5 text-sm text-slate-700 hover:bg-red-50 hover:text-red-600"
-                    onClick={() => setCategoriesOpen(false)}
-                  >
-                    {cat}
-                    <span className="text-slate-400">›</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
       </nav>
     </header>
+  );
+};
+
+interface CategoryMenuProps {
+  isHome: boolean;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+const CategoryMenu = ({ isHome, open, onOpenChange }: CategoryMenuProps) => {
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        onOpenChange(false);
+      }
+    };
+
+    if (open) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open, onOpenChange]);
+
+  return (
+    <div
+      ref={wrapperRef}
+      className="relative inline-block"
+      onMouseLeave={() => {
+        if (!isHome) onOpenChange(false);
+      }}
+    >
+      <button
+        type="button"
+        onClick={() => onOpenChange(!open)}
+        className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-red-700"
+      >
+        <Menu className="h-5 w-5" />
+        <span>DANH MỤC SẢN PHẨM</span>
+      </button>
+
+      {/* Categories dropdown - độ rộng đúng theo nút */}
+      {open && (
+        <div className="absolute left-0 top-full z-50 mt-1 w-full rounded-b-lg border border-t-0 border-slate-200 bg-white shadow-lg">
+          <ul className="py-2">
+            {[
+              "Đầu ghi Camera",
+              "Phụ Kiện Camera",
+              "Thiết bị chống trộm",
+              "Máy Chấm Công",
+              "Thiết Bị Mạng",
+              "Thiết Bị Gia Đình",
+              "Camera Yoosee",
+              "Trọn Bộ Camera Hikvision IP",
+              "Trọn Bộ Camera Hikvision HDTVI",
+            ].map((cat) => (
+              <li key={cat}>
+                <Link
+                  to={`/products?category=${encodeURIComponent(cat)}`}
+                  className="flex items-center justify-between px-4 py-2.5 text-sm text-slate-700 hover:bg-red-50 hover:text-red-600"
+                  onClick={() => onOpenChange(false)}
+                >
+                  {cat}
+                  <span className="text-slate-400">›</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 };
 

@@ -1,45 +1,41 @@
 /**
  * API service cho trang chủ - Banner, Products, News.
- * Hiện dùng mock data. Khi BE có API thật, thay bằng axios gọi endpoint.
+ * Không còn mock fallback: nếu BE lỗi sẽ ném exception để UI hiển thị skeleton + thông báo.
  */
 
 import type { Banner, NewsItem, Product } from "../types/home";
-import {
-  mockBanners,
-  mockNews,
-  mockProducts,
-  mockPromoBanners,
-} from "../mocks/homeMockData";
+import api from "./axiosConfig";
 
-const API_BASE = import.meta.env.VITE_API_URL || "/api";
+const HOME_API_BASE = "/api/home";
 
-/** Lấy banner chính (Banner.urlimg từ admin) */
+/** Lấy banner chính (Banner.urlimg từ BE) */
 export async function getBanners(): Promise<Banner[]> {
-  // TODO: Khi có BE: return (await api.get(`${API_BASE}/banners`)).data;
-  return Promise.resolve(mockBanners);
+  const res = await api.get<Banner[]>(`${HOME_API_BASE}/banners`);
+  return res.data;
 }
 
 /** Lấy banner khuyến mãi bên phải */
 export async function getPromoBanners(): Promise<Banner[]> {
-  // TODO: Khi có BE: return (await api.get(`${API_BASE}/banners/promo`)).data;
-  return Promise.resolve(mockPromoBanners);
+  const res = await api.get<Banner[]>(`${HOME_API_BASE}/promo-banners`);
+  return res.data;
 }
 
 /** Lấy danh sách sản phẩm (filter: best | hot | combo) */
 export async function getProducts(filter?: string): Promise<Product[]> {
-  // TODO: Khi có BE: return (await api.get(`${API_BASE}/products`, { params: { filter } })).data;
-  return Promise.resolve(mockProducts);
+  const res = await api.get<Product[]>(`${HOME_API_BASE}/products`, {
+    params: { filter },
+  });
+  return res.data;
 }
 
 /** Lấy sản phẩm mới (isNew) */
 export async function getNewProducts(): Promise<Product[]> {
-  // TODO: Khi có BE: return (await api.get(`${API_BASE}/products/new`)).data;
-  const withNew = mockProducts.filter((p) => p.isNew);
-  return Promise.resolve(withNew.length > 0 ? withNew : mockProducts.slice(0, 5));
+  const res = await api.get<Product[]>(`${HOME_API_BASE}/new-products`);
+  return res.data;
 }
 
-/** Lấy tin tức (News.title từ admin) */
+/** Lấy tin tức (News.title từ BE) */
 export async function getNews(): Promise<NewsItem[]> {
-  // TODO: Khi có BE: return (await api.get(`${API_BASE}/news`)).data;
-  return Promise.resolve(mockNews);
+  const res = await api.get<NewsItem[]>(`${HOME_API_BASE}/news`);
+  return res.data;
 }
