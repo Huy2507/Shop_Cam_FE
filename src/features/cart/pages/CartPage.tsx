@@ -3,6 +3,8 @@ import Header from "@components/layout/Header";
 import Footer from "@components/layout/Footer";
 import { useCart } from "../../../contexts/CartContext";
 import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import { useState } from "react";
+import CheckoutModal from "@components/cart/CheckoutModal";
 
 // Hàm tiện ích để format giá về VND cho toàn bộ màn giỏ hàng.
 const formatPrice = (price: number) =>
@@ -10,6 +12,7 @@ const formatPrice = (price: number) =>
 
 export default function CartPage() {
   const { items, totalCount, totalAmount, updateQuantity, removeItem } = useCart();
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
@@ -121,10 +124,11 @@ export default function CartPage() {
                 <button
                   type="button"
                   className="rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white hover:bg-red-700"
-                  disabled
-                  title="Chức năng thanh toán sẽ phát triển sau"
+                  onClick={() => setCheckoutOpen(true)}
+                  disabled={items.length === 0}
+                  title={items.length === 0 ? "Giỏ hàng trống" : "Nhập thông tin và đặt hàng"}
                 >
-                  Thanh toán
+                  Đặt hàng
                 </button>
               </div>
             </div>
@@ -132,6 +136,7 @@ export default function CartPage() {
         )}
       </main>
       <Footer />
+      <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </div>
   );
 }

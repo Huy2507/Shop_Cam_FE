@@ -51,6 +51,8 @@ interface CartContextValue {
   removeItem: (productId: string) => void;
   /** Cập nhật lại số lượng hiện tại; nếu quantity < 1 thì tự động xoá dòng đó. */
   updateQuantity: (productId: string, quantity: number) => void;
+  /** Xoá toàn bộ giỏ hàng (dùng sau khi đặt hàng thành công). */
+  clearCart: () => void;
   /** Mở modal thêm vào giỏ (từ ProductCard gọi với product). */
   openAddToCartModal: (product: Product) => void;
   closeAddToCartModal: () => void;
@@ -127,6 +129,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  // Xoá sạch toàn bộ giỏ hàng.
+  const clearCart = useCallback(() => {
+    setItems([]);
+  }, []);
+
   // Tổng số sản phẩm trong giỏ (cộng toàn bộ quantity).
   const totalCount = useMemo(
     () => items.reduce((sum, i) => sum + i.quantity, 0),
@@ -160,6 +167,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       addItem,
       removeItem,
       updateQuantity,
+      clearCart,
       openAddToCartModal,
       closeAddToCartModal,
       modalProduct,
@@ -171,6 +179,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       addItem,
       removeItem,
       updateQuantity,
+      clearCart,
       openAddToCartModal,
       closeAddToCartModal,
       modalProduct,
