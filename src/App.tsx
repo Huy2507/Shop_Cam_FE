@@ -9,20 +9,24 @@ import ProductsPage from "@features/static/pages/ProductsPage";
 import BlogPage from "@features/static/pages/BlogPage";
 import TechGuidePage from "@features/static/pages/TechGuidePage";
 import ContactPage from "@features/static/pages/ContactPage";
+import CartPage from "@features/cart/pages/CartPage";
+import AddToCartModal from "@components/cart/AddToCartModal";
 import Error403Page from "./pages/Error403Page";
 import Error404Page from "./pages/Error404Page";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
+    <>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
 
-      {/* Navigation bar pages */}
-      <Route path="/gioi-thieu" element={<IntroPage />} />
-      <Route path="/products" element={<ProductsPage />} />
-      <Route path="/blog" element={<BlogPage />} />
-      <Route path="/guide" element={<TechGuidePage />} />
-      <Route path="/contact" element={<ContactPage />} />
+        {/* Navigation bar pages */}
+        <Route path="/gioi-thieu" element={<IntroPage />} />
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/guide" element={<TechGuidePage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/cart" element={<CartPage />} />
 
       {/* Auth */}
       <Route path="/login" element={<Login />} />
@@ -33,6 +37,8 @@ function App() {
       <Route path="/unauthorized" element={<Error403Page />} />
       <Route path="*" element={<Error404Page />} />
     </Routes>
+    <AddToCartModal />
+    </>
   );
 }
 

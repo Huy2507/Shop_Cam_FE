@@ -1,13 +1,22 @@
+import { useCart } from "../../contexts/CartContext";
 import type { Product } from "../../types/home";
 
 interface ProductCardProps {
   product: Product;
 }
 
+// Format giá tiền hiển thị trên thẻ sản phẩm.
 const formatPrice = (price: number) =>
   new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(price);
 
+/**
+ * Thẻ hiển thị 1 sản phẩm đơn lẻ trên grid:
+ * - Ảnh, badge, trạng thái mới/hết hàng
+ * - Giá gốc / giá khuyến mãi
+ * - Nút "Thêm vào giỏ" mở modal chọn số lượng (không xử lý logic giỏ trực tiếp).
+ */
 const ProductCard = ({ product }: ProductCardProps) => {
+  const { openAddToCartModal } = useCart();
   const hasDiscount = product.discount != null && product.discount > 0;
   const newPrice = hasDiscount ? product.price - (product.discount ?? 0) : product.price;
 
@@ -63,6 +72,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         {!product.outOfStock && (
           <button
             type="button"
+            onClick={() => openAddToCartModal(product)}
             className="mt-3 w-full rounded-lg border border-red-600 bg-white py-2 text-sm font-medium text-red-600 transition hover:bg-red-600 hover:text-white"
           >
             Thêm vào giỏ
