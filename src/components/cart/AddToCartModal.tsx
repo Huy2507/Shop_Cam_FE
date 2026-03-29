@@ -1,10 +1,8 @@
+import { formatVnd } from "@utils/formatVnd";
+import { getUnitPriceAfterDiscount, hasActiveDiscount } from "@utils/productPricing";
 import { Minus, Plus, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useCart } from "../../contexts/CartContext";
-
-// Format giá về VND để hiển thị trong modal.
-const formatPrice = (price: number) =>
-  new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(price);
 
 /**
  * Modal xác nhận thêm sản phẩm vào giỏ: chọn số lượng và bấm Xác nhận.
@@ -22,10 +20,8 @@ export default function AddToCartModal() {
   if (!modalProduct) return null;
 
   // Tính lại đơn giá hiển thị trong modal (ưu tiên giá đã trừ discount).
-  const hasDiscount = modalProduct.discount != null && modalProduct.discount > 0;
-  const unitPrice = hasDiscount
-    ? modalProduct.price - (modalProduct.discount ?? 0)
-    : modalProduct.price;
+  const hasDiscount = hasActiveDiscount(modalProduct.discount);
+  const unitPrice = getUnitPriceAfterDiscount(modalProduct.price, modalProduct.discount);
   const lineTotal = unitPrice * quantity;
 
   // Khi xác nhận: thêm vào giỏ với số lượng đã chọn rồi đóng modal.
@@ -73,10 +69,10 @@ export default function AddToCartModal() {
               {modalProduct.name}
             </p>
             <p className="mt-1 text-base font-bold text-red-600">
-              {formatPrice(unitPrice)}
+              {formatVnd(unitPrice)}
               {hasDiscount && (
                 <span className="ml-2 text-sm font-normal text-slate-400 line-through">
-                  {formatPrice(modalProduct.price)}
+                  {formatVnd(modalProduct.price)}
                 </span>
               )}
             </p>
@@ -108,7 +104,7 @@ export default function AddToCartModal() {
 
         <div className="flex items-center justify-between border-t border-slate-200 px-4 py-3">
           <span className="text-sm text-slate-600">
-            Tạm tính: <strong className="text-red-600">{formatPrice(lineTotal)}</strong>
+            Tạm tính: <strong className="text-red-600">{formatVnd(lineTotal)}</strong>
           </span>
           <div className="flex gap-2">
             <button

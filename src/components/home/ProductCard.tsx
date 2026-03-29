@@ -1,13 +1,12 @@
 import { useCart } from "../../contexts/CartContext";
 import type { Product } from "../../types/home";
+import { formatVnd } from "@utils/formatVnd";
+import { getUnitPriceAfterDiscount, hasActiveDiscount } from "@utils/productPricing";
+import { Link } from "react-router-dom";
 
 interface ProductCardProps {
   product: Product;
 }
-
-// Format giá tiền hiển thị trên thẻ sản phẩm.
-const formatPrice = (price: number) =>
-  new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(price);
 
 /**
  * Thẻ hiển thị 1 sản phẩm đơn lẻ trên grid:
@@ -17,12 +16,15 @@ const formatPrice = (price: number) =>
  */
 const ProductCard = ({ product }: ProductCardProps) => {
   const { openAddToCartModal } = useCart();
-  const hasDiscount = product.discount != null && product.discount > 0;
-  const newPrice = hasDiscount ? product.price - (product.discount ?? 0) : product.price;
+  const hasDiscount = hasActiveDiscount(product.discount);
+  const newPrice = getUnitPriceAfterDiscount(product.price, product.discount);
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
-      <div className="relative aspect-square overflow-hidden bg-slate-100">
+      <Link
+        to={`/san-pham/${product.id}`}
+        className="relative block aspect-square overflow-hidden bg-slate-100"
+      >
         <img
           src={product.imageUrl}
           alt={product.name}
@@ -50,29 +52,34 @@ const ProductCard = ({ product }: ProductCardProps) => {
             {product.info}
           </div>
         )}
-      </div>
+      </Link>
 
       <div className="flex flex-1 flex-col p-3">
-        <h3 className="mb-2 line-clamp-2 text-sm font-medium text-slate-800">
-          {product.name}
-        </h3>
+        <Link to={`/san-pham/${product.id}`}>
+          <h3 className="mb-2 line-clamp-2 text-sm font-medium text-slate-800 transition hover:text-red-600">
+            {product.name}
+          </h3>
+        </Link>
 
         <div className="mt-auto space-y-1">
           {hasDiscount ? (
             <>
               <p className="text-xs text-slate-500">Giá khuyến mãi:</p>
-              <p className="text-lg font-bold text-red-600">{formatPrice(newPrice)}</p>
-              <p className="text-sm text-slate-400 line-through">{formatPrice(product.price)}</p>
+              <p className="text-lg font-bold text-red-600">{formatVnd(newPrice)}</p>
+              <p className="text-sm text-slate-400 line-through">{formatVnd(product.price)}</p>
             </>
           ) : (
-            <p className="text-lg font-bold text-red-600">{formatPrice(product.price)}</p>
+            <p className="text-lg font-bold text-red-600">{formatVnd(product.price)}</p>
           )}
         </div>
 
         {!product.outOfStock && (
           <button
             type="button"
-            onClick={() => openAddToCartModal(product)}
+            onClick={(e) => {
+              e.preventDefault();
+              openAddToCartModal(product);
+            }}
             className="mt-3 w-full rounded-lg border border-red-600 bg-white py-2 text-sm font-medium text-red-600 transition hover:bg-red-600 hover:text-white"
           >
             Thêm vào giỏ

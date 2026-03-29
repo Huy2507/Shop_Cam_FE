@@ -1,14 +1,12 @@
-import { Link } from "react-router-dom";
-import Header from "@components/layout/Header";
+import CheckoutModal from "@components/cart/CheckoutModal";
 import Footer from "@components/layout/Footer";
+import Header from "@components/layout/Header";
 import { useCart } from "../../../contexts/CartContext";
+import { formatVnd } from "@utils/formatVnd";
+import { getUnitPriceAfterDiscount, hasActiveDiscount } from "@utils/productPricing";
 import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useState } from "react";
-import CheckoutModal from "@components/cart/CheckoutModal";
-
-// Hàm tiện ích để format giá về VND cho toàn bộ màn giỏ hàng.
-const formatPrice = (price: number) =>
-  new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(price);
+import { Link } from "react-router-dom";
 
 export default function CartPage() {
   const { items, totalCount, totalAmount, updateQuantity, removeItem } = useCart();
@@ -35,10 +33,7 @@ export default function CartPage() {
           <>
             <ul className="space-y-4">
               {items.map((item) => {
-                const unitPrice =
-                  item.discount != null && item.discount > 0
-                    ? item.price - item.discount
-                    : item.price;
+                const unitPrice = getUnitPriceAfterDiscount(item.price, item.discount);
                 const lineTotal = unitPrice * item.quantity;
                 return (
                   <li
@@ -55,10 +50,10 @@ export default function CartPage() {
                     <div className="min-w-0 flex-1">
                       <p className="font-medium text-slate-800 line-clamp-2">{item.name}</p>
                       <p className="mt-1 text-sm font-bold text-red-600">
-                        {formatPrice(unitPrice)}
-                        {item.discount != null && item.discount > 0 && (
+                        {formatVnd(unitPrice)}
+                        {hasActiveDiscount(item.discount) && (
                           <span className="ml-2 text-slate-400 line-through">
-                            {formatPrice(item.price)}
+                            {formatVnd(item.price)}
                           </span>
                         )}
                       </p>
@@ -96,7 +91,7 @@ export default function CartPage() {
                     </div>
                     <div className="shrink-0 text-right">
                       <p className="text-sm text-slate-600">Thành tiền</p>
-                      <p className="font-bold text-red-600">{formatPrice(lineTotal)}</p>
+                      <p className="font-bold text-red-600">{formatVnd(lineTotal)}</p>
                     </div>
                   </li>
                 );
@@ -111,7 +106,7 @@ export default function CartPage() {
               <div className="mt-3 flex items-center justify-between">
                 <span className="text-lg font-medium text-slate-800">Tổng thanh toán</span>
                 <span className="text-xl font-bold text-red-600">
-                  {formatPrice(totalAmount)}
+                  {formatVnd(totalAmount)}
                 </span>
               </div>
               <div className="mt-4 flex justify-end gap-2">

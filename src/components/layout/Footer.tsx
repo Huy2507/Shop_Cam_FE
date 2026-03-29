@@ -1,3 +1,4 @@
+import { STOREFRONT_CATEGORY_NAMES_FOOTER } from "@constants/storefrontCategories";
 import { MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -106,47 +107,32 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Column 3: Product categories */}
+          {/* Column 3: Product categories — đồng bộ với danh mục header */}
           <div>
             <h3 className="mb-4 font-bold uppercase tracking-wide text-slate-800">
               Sản phẩm
             </h3>
             <ul className="space-y-2 text-sm text-slate-600">
               <li>
-                <Link to="/products/camera-wifi-realink-e1" className="hover:text-red-600">
-                  Camera Wifi Realink E1 Zoom 5MP
+                <Link to="/products?tab=hot" className="hover:text-red-600">
+                  Khuyến mãi / giảm giá
                 </Link>
               </li>
               <li>
-                <Link to="/products/camera-wifi-511w" className="hover:text-red-600">
-                  Camera Wifi Realink 511W - Siêu Nét 5M
+                <Link to="/products?tab=combo" className="hover:text-red-600">
+                  Combo trọn bộ
                 </Link>
               </li>
-              <li>
-                <Link to="/products/camera-ezviz-c6n" className="hover:text-red-600">
-                  Camera Ezviz C6N 2M
-                </Link>
-              </li>
-              <li>
-                <Link to="/products/camera-ezviz-ngoai-troi" className="hover:text-red-600">
-                  Camera Ezviz ngoài trời 2MP
-                </Link>
-              </li>
-              <li>
-                <Link to="/products/camera-yoosee" className="hover:text-red-600">
-                  Camera Yoosee Giá Rẻ
-                </Link>
-              </li>
-              <li>
-                <Link to="/products/chong-trom" className="hover:text-red-600">
-                  Thiết Bị Chống Trộm Gia Đình
-                </Link>
-              </li>
-              <li>
-                <Link to="/products/den-nang-luong" className="hover:text-red-600">
-                  Đèn Năng Lượng Mặt Trời
-                </Link>
-              </li>
+              {STOREFRONT_CATEGORY_NAMES_FOOTER.map((cat) => (
+                <li key={cat}>
+                  <Link
+                    to={`/products?category=${encodeURIComponent(cat)}`}
+                    className="hover:text-red-600"
+                  >
+                    {cat}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

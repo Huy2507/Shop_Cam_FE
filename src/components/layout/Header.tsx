@@ -1,15 +1,9 @@
+import { formatVnd } from "@utils/formatVnd";
 import { Menu, Phone, Search, ShoppingBag } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { STOREFRONT_CATEGORY_NAMES_HEADER } from "@constants/storefrontCategories";
 import { useCart } from "../../contexts/CartContext";
-
-// Hiển thị tổng tiền giỏ hàng (VND, không cần phần lẻ).
-const formatPrice = (price: number) =>
-  new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-    maximumFractionDigits: 0,
-  }).format(price);
 
 /**
  * Header chung cho toàn bộ site:
@@ -19,6 +13,7 @@ const formatPrice = (price: number) =>
 const Header = () => {
     const { totalCount, totalAmount } = useCart();
     const location = useLocation();
+    const navigate = useNavigate();
     const isHome = location.pathname === "/";
 
     const [searchQuery, setSearchQuery] = useState("");
@@ -28,6 +23,27 @@ const Header = () => {
         // Trên màn hình Trang chủ, danh mục luôn mở mặc định khi load.
         setCategoriesOpen(isHome);
     }, [isHome]);
+
+    useEffect(() => {
+        if (location.pathname === "/products") {
+            const q = new URLSearchParams(location.search).get("q") ?? "";
+            setSearchQuery(q);
+        }
+    }, [location.pathname, location.search]);
+
+    const handleSearchSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        const v = searchQuery.trim();
+        if (location.pathname === "/products") {
+            const sp = new URLSearchParams(location.search);
+            if (v) sp.set("q", v);
+            else sp.delete("q");
+            sp.set("page", "1");
+            navigate({ pathname: "/products", search: sp.toString() });
+        } else {
+            navigate(v ? `/products?q=${encodeURIComponent(v)}` : "/products");
+        }
+    };
 
     return (
         <header className="relative sticky top-0 z-50 bg-white border-b shadow-sm border-slate-200">
@@ -43,21 +59,28 @@ const Header = () => {
                         </span>
                     </Link>
 
-                    <div className="relative flex-1 mx-4 max-w-xl">
+                    <form
+                        onSubmit={handleSearchSubmit}
+                        className="relative mx-4 flex-1 max-w-xl"
+                        role="search"
+                    >
                         <input
-                            type="text"
+                            type="search"
+                            name="q"
                             placeholder="Bạn muốn tìm gì....."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="py-2 pr-12 pl-4 w-full text-sm bg-white rounded-lg border transition outline-none border-slate-200 focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                            className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-4 pr-12 text-sm outline-none transition focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                            autoComplete="off"
                         />
                         <button
-                            type="button"
+                            type="submit"
                             className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1.5 text-slate-500 hover:bg-red-50 hover:text-red-600"
+                            aria-label="Tìm kiếm"
                         >
-                            <Search className="w-5 h-5" />
+                            <Search className="h-5 w-5" />
                         </button>
-                    </div>
+                    </form>
 
                     <div className="flex gap-4 items-center">
                         <a
@@ -76,7 +99,7 @@ const Header = () => {
                             <ShoppingBag className="w-5 h-5" />
                             <span>
                                 Giỏ hàng {totalCount > 0 ? `(${totalCount}) ` : ""}
-                                {formatPrice(totalAmount)}
+                                {formatVnd(totalAmount)}
                             </span>
                         </Link>
                     </div>
@@ -85,12 +108,7 @@ const Header = () => {
 
             {/* Navigation */}
             <nav className="px-4 mx-auto max-w-7xl">
-                <div
-                    className="flex flex-col gap-3 py-3 sm:flex-row sm:items-center"
-                    onMouseEnter={() => {
-                        if (!isHome) setCategoriesOpen(true);
-                    }}
-                >
+                <div className="flex flex-col gap-3 py-3 sm:flex-row sm:items-center">
                     <CategoryMenu
                         isHome={isHome}
                         open={categoriesOpen}
@@ -167,6 +185,7 @@ const CategoryMenu = ({ isHome, open, onOpenChange }: CategoryMenuProps) => {
         <div
             ref={wrapperRef}
             className="inline-block relative"
+            onMouseEnter={() => onOpenChange(true)}
             onMouseLeave={() => {
                 if (!isHome) onOpenChange(false);
             }}
@@ -182,19 +201,12 @@ const CategoryMenu = ({ isHome, open, onOpenChange }: CategoryMenuProps) => {
 
             {/* Categories dropdown - độ rộng đúng theo nút */}
             {open && (
-                <div className="absolute left-0 top-full z-50 mt-1 w-full bg-white rounded-b-lg border border-t-0 shadow-lg border-slate-200">
+                <div className="absolute left-0 top-full z-50 w-full">
+                    {/* Lấp khoảng giữa nút và panel — tránh chuột “lọt” ra ngoài và kích hoạt mouseleave */}
+                    <div className="h-2 w-full" aria-hidden />
+                    <div className="overflow-hidden rounded-b-lg border border-t-0 border-slate-200 bg-white shadow-lg">
                     <ul className="py-2">
-                        {[
-                            "Đầu ghi Camera",
-                            "Phụ Kiện Camera",
-                            "Thiết bị chống trộm",
-                            "Máy Chấm Công",
-                            "Thiết Bị Mạng",
-                            "Thiết Bị Gia Đình",
-                            "Camera Yoosee",
-                            "Trọn Bộ Camera Hikvision IP",
-                            "Trọn Bộ Camera Hikvision HDTVI"
-                        ].map((cat) => (
+                        {STOREFRONT_CATEGORY_NAMES_HEADER.map((cat) => (
                             <li key={cat}>
                                 <Link
                                     to={`/products?category=${encodeURIComponent(cat)}`}
@@ -207,6 +219,7 @@ const CategoryMenu = ({ isHome, open, onOpenChange }: CategoryMenuProps) => {
                             </li>
                         ))}
                     </ul>
+                    </div>
                 </div>
             )}
         </div>

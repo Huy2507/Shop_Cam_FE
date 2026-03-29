@@ -1,4 +1,5 @@
 import type { NewsItem } from "../../types/home";
+import { Link } from "react-router-dom";
 
 interface NewsGridProps {
   news: NewsItem[];
@@ -15,8 +16,8 @@ const NewsGrid = ({ news }: NewsGridProps) => {
         {/* Featured (larger) */}
         {featured && (
           <div className="sm:col-span-2 lg:row-span-2">
-            <a
-              href="#"
+            <Link
+              to={`/tin-tuc/${featured.id}`}
               className="group block overflow-hidden rounded-lg"
             >
               <div className="relative aspect-[16/10] overflow-hidden rounded-lg bg-slate-200">
@@ -32,15 +33,15 @@ const NewsGrid = ({ news }: NewsGridProps) => {
                   </h3>
                 </div>
               </div>
-            </a>
+            </Link>
           </div>
         )}
 
         {/* Smaller cards */}
         {rest.slice(0, 6).map((item) => (
-          <a
+          <Link
             key={item.id}
-            href="#"
+            to={`/tin-tuc/${item.id}`}
             className="group block overflow-hidden rounded-lg"
           >
             <div className="relative aspect-square overflow-hidden rounded-lg bg-slate-200">
@@ -56,7 +57,7 @@ const NewsGrid = ({ news }: NewsGridProps) => {
                 </h3>
               </div>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </section>
