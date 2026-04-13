@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shop Cam Admin</title>
+    <script>
+      (function () {
+        const darkMode = localStorage.getItem("darkMode") === "true";
+        if (darkMode) {
+          document.documentElement.classList.add("dark");
+        }
+        document.documentElement.style.visibility = "visible";
+      })();
+    </script>
+    <style>
+      html {
+        visibility: hidden;
+      }
+      html.dark {
+        color-scheme: dark;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/admin/main-admin.tsx"></script>
+  </body>
+</html>
+

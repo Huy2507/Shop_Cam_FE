@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:storefront": "tsc -b && vite build --config vite.config.ts --outDir dist-storefront --emptyOutDir=false --ssrManifest=false --manifest=true --base=/",
+    "build:admin": "tsc -b && vite build --config vite.config.ts --outDir dist-admin --emptyOutDir=false --ssrManifest=false --manifest=true --base=/ --ssrManifest=false --name=admin --input=admin.html",
     "lint": "eslint .",
     "preview": "vite preview",
     "prepare": "husky",

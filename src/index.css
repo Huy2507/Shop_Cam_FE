@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mặc định — có thể bị ghi đè bởi SiteUiConfigProvider (API /api/home/ui-config) */
+:root {
+  --site-primary: #dc2626;
+  --site-accent: #f59e0b;
+  --site-header-bg: transparent;
+}
+
 html,
 body,
 #root {
