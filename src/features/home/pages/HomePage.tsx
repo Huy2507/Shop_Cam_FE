@@ -1,4 +1,5 @@
 import Banner from "@components/home/Banner";
+import HomeCategorySidebar from "@components/home/HomeCategorySidebar";
 import MidPromoGrid from "@components/home/MidPromoGrid";
 import NewsGrid from "@components/home/NewsGrid";
 import ProductGrid from "@components/home/ProductGrid";
@@ -8,16 +9,20 @@ import Header from "@components/layout/Header";
 import StorefrontWithSideAds from "@components/layout/StorefrontWithSideAds";
 import type {
   Banner as BannerType,
+  CategoryMenu,
   NewsItem,
   Product,
 } from "../../../types/home";
 import type { HomeSectionId } from "../../../types/siteUi";
 import {
   getBanners,
+  getMenuCategories,
   getNews,
   getNewProducts,
   getProducts,
   getPromoBanners,
+  getSideAds,
+  type SideAdItem,
 } from "@services/homeApi";
 import { useSiteUiConfig } from "@contexts/SiteUiConfigProvider";
 import { useTranslation } from "react-i18next";
@@ -34,6 +39,9 @@ const HomePage = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [newProducts, setNewProducts] = useState<Product[]>([]);
   const [news, setNews] = useState<NewsItem[]>([]);
+  const [menuCategories, setMenuCategories] = useState<CategoryMenu[]>([]);
+  const [leftSideAd, setLeftSideAd] = useState<SideAdItem | null>(null);
+  const [rightSideAd, setRightSideAd] = useState<SideAdItem | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -47,12 +55,15 @@ const HomePage = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const [b, pb, p, np, n] = await Promise.all([
+        const [b, pb, p, np, n, cats, leftAds, rightAds] = await Promise.all([
           getBanners(),
           getPromoBanners(),
           getProducts(productFilter),
           getNewProducts(),
           getNews({ page: 1, pageSize: hp.homeNewsTake }),
+          getMenuCategories().catch(() => [] as CategoryMenu[]),
+          getSideAds("left").catch(() => [] as SideAdItem[]),
+          getSideAds("right").catch(() => [] as SideAdItem[]),
         ]);
         if (cancelled) return;
         setBanners(b);
@@ -60,8 +71,11 @@ const HomePage = () => {
         setProducts(p);
         setNewProducts(np);
         setNews(n.items);
+        setMenuCategories(cats);
+        setLeftSideAd(leftAds[0] ?? null);
+        setRightSideAd(rightAds[0] ?? null);
       } catch {
-        if (!cancelled) setError(t("common.storefront.errors.loadHome"));
+        if (!cancelled) setError(t("storefront.errors.loadHome"));
       } finally {
         if (!cancelled) setIsLoading(false);
       }
@@ -75,17 +89,45 @@ const HomePage = () => {
   const renderSection = (sectionId: HomeSectionId) => {
     switch (sectionId) {
       case "bannerPromo": {
-        if (!hp.showBannerBlock && !hp.showPromoSidebar) return null;
-        const both = hp.showBannerBlock && hp.showPromoSidebar;
+        const layout = hp.categoryLayout ?? "navbar";
+        const showPromo =
+          layout === "sidebar_no_promo" ? false : hp.showPromoSidebar;
+        const hasPromo = showPromo && promoBanners.length > 0;
+        const useSidebarLayout = layout === "sidebar_no_promo";
+
+        if (!hp.showBannerBlock && !hasPromo) return null;
+        const both = hp.showBannerBlock && hasPromo;
         return (
           <div
             key="bannerPromo"
-            className={`mb-8 grid gap-4 ${both ? "lg:grid-cols-[1fr_260px]" : "lg:grid-cols-1"}`}
+            className={`mb-8 grid grid-cols-1 gap-4 lg:h-[min(420px,50vh)] ${
+              useSidebarLayout
+                ? "lg:grid-cols-[220px_minmax(0,1fr)] lg:items-stretch"
+                : both
+                ? "lg:grid-cols-[minmax(0,1fr)_260px] lg:items-stretch"
+                : "lg:grid-cols-1 lg:items-stretch"
+            }`}
           >
-            {hp.showBannerBlock ? (
-              <Banner banners={banners} className="min-h-[300px]" />
+            {/* Cột danh mục: chỉ hiện từ lg để không đẩy banner khi thu màn hình */}
+            {useSidebarLayout ? (
+              <HomeCategorySidebar categories={menuCategories} className="lg:h-full" />
             ) : null}
-            {hp.showPromoSidebar ? <PromoBanners banners={promoBanners} /> : null}
+
+            {hp.showBannerBlock ? (
+              <div className="min-h-[280px] min-w-0 overflow-hidden lg:h-full">
+                <Banner
+                  banners={banners}
+                  fillHeight
+                  className="h-full"
+                />
+              </div>
+            ) : null}
+
+            {hasPromo ? (
+              <div className="min-w-0 lg:h-full lg:overflow-y-auto">
+                <PromoBanners banners={promoBanners} />
+              </div>
+            ) : null}
           </div>
         );
       }
@@ -109,7 +151,7 @@ const HomePage = () => {
             <ProductGrid
               products={products}
               activeFilter={productFilter}
-              onFilterChange={setProductFilter}
+              onFilterChange={(next) => setProductFilter(next as "best" | "hot" | "combo")}
             />
           </div>
         );
@@ -117,7 +159,7 @@ const HomePage = () => {
         if (!hp.showNewArrivals) return null;
         {
           const naTitle =
-            hp.newArrivalsTitle?.trim() || t("common.storefront.newCollection");
+            hp.newArrivalsTitle?.trim() || t("storefront.newCollection");
           return (
             <div key="newArrivals" className="mb-12">
               <div className="mb-4 flex items-center gap-2">
@@ -154,7 +196,7 @@ const HomePage = () => {
         <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 py-6">
           <div className="mb-6 h-4 w-40 rounded bg-slate-200" />
 
-          <div className="mb-8 grid gap-4 lg:grid-cols-[1fr_280px] animate-pulse">
+          <div className="mb-8 grid gap-4 animate-pulse lg:grid-cols-[1fr_280px]">
             <div className="h-64 rounded-xl bg-slate-200" />
             <div className="space-y-3">
               <div className="h-20 rounded-lg bg-slate-200" />
@@ -219,8 +261,10 @@ const HomePage = () => {
         ) : null}
 
         <StorefrontWithSideAds
-          leftAdLabel={t("common.storefront.adSlotLeft")}
-          rightAdLabel={t("common.storefront.adSlotRight")}
+          leftAdLabel={t("storefront.adSlotLeft")}
+          rightAdLabel={t("storefront.adSlotRight")}
+          leftAd={leftSideAd}
+          rightAd={rightSideAd}
         >
           {order.map((sid) => renderSection(sid))}
         </StorefrontWithSideAds>

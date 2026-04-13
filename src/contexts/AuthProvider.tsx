@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   logout as authServiceLogout,
   getCurrentUser,
@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const fetchUserInfo = async () => {
     try {
@@ -41,8 +42,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    fetchUserInfo();
-  }, []);
+    const authPages = new Set([
+      "/login",
+      "/forgot-password",
+      "/verify-otp",
+      "/change-password",
+    ]);
+
+    if (authPages.has(location.pathname)) {
+      // Ở các trang auth không cần call current-user để tránh vòng lặp 401/refresh.
+      setLoading(false);
+      return;
+    }
+
+    void fetchUserInfo();
+  }, [location.pathname]);
 
   return (
     <AuthContext.Provider

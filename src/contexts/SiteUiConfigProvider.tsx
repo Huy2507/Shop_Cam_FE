@@ -16,6 +16,7 @@ const defaultNewsPage: PublicUiConfig["newsPage"] = {
 };
 
 const defaultHomePage: PublicUiConfig["homePage"] = {
+  categoryLayout: "navbar",
   showBannerBlock: true,
   showPromoSidebar: true,
   showMidPromo: true,

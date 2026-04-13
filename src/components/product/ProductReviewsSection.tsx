@@ -57,7 +57,7 @@ export default function ProductReviewsSection({ productId }: ProductReviewsSecti
       setTotalPages(data.totalPages);
       setAverageRating(data.averageRating);
     } catch {
-      toast.error(t("common.storefront.errors.loadReviews"));
+      toast.error(t("storefront.errors.loadReviews"));
       setItems([]);
       setTotalCount(0);
       setTotalPages(0);
@@ -76,11 +76,11 @@ export default function ProductReviewsSection({ productId }: ProductReviewsSecti
     const name = authorName.trim();
     const text = comment.trim();
     if (name.length < 1) {
-      toast.error(t("common.storefront.reviewEnterName"));
+      toast.error(t("storefront.reviewEnterName"));
       return;
     }
     if (text.length < 1) {
-      toast.error(t("common.storefront.reviewEnterContent"));
+      toast.error(t("storefront.reviewEnterContent"));
       return;
     }
     const payload: CreateProductReviewPayload = {
@@ -91,7 +91,7 @@ export default function ProductReviewsSection({ productId }: ProductReviewsSecti
     setSubmitting(true);
     try {
       await createProductReview(productId, payload);
-      toast.success(t("common.storefront.reviewThanks"));
+      toast.success(t("storefront.reviewThanks"));
       setAuthorName("");
       setComment("");
       setRatingPick(5);
@@ -106,7 +106,7 @@ export default function ProductReviewsSection({ productId }: ProductReviewsSecti
         ? (err.response?.data as { errors?: string[] })?.errors?.[0] ??
           (err.response?.data as { message?: string })?.message
         : null;
-      toast.error(msg || t("common.storefront.errors.submitReview"));
+      toast.error(msg || t("storefront.errors.submitReview"));
     } finally {
       setSubmitting(false);
     }
@@ -115,33 +115,33 @@ export default function ProductReviewsSection({ productId }: ProductReviewsSecti
   return (
     <section className="mt-10 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
-        <h2 className="text-lg font-bold text-slate-800">{t("common.storefront.productReviews")}</h2>
+        <h2 className="text-lg font-bold text-slate-800">{t("storefront.productReviews")}</h2>
         {!loading && totalCount > 0 && (
           <div className="flex flex-wrap items-center gap-2 text-sm text-slate-600">
             <span className="font-medium text-slate-800">
               {averageRating != null ? averageRating.toFixed(1) : "—"}
             </span>
             <StarsDisplay rating={averageRating ?? 0} />
-            <span className="text-slate-500">({totalCount} {t("common.storefront.reviews")})</span>
+            <span className="text-slate-500">({totalCount} {t("storefront.reviews")})</span>
           </div>
         )}
       </div>
 
       <div className="mb-8 rounded-lg border border-slate-100 bg-slate-50/80 p-4">
-        <h3 className="mb-3 text-sm font-semibold text-slate-800">{t("common.storefront.writeReview")}</h3>
+        <h3 className="mb-3 text-sm font-semibold text-slate-800">{t("storefront.writeReview")}</h3>
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="mb-1 block text-xs font-medium text-slate-600">{t("common.storefront.displayName")}</label>
+            <label className="mb-1 block text-xs font-medium text-slate-600">{t("storefront.displayName")}</label>
             <input
               value={authorName}
               onChange={(e) => setAuthorName(e.target.value)}
               maxLength={100}
               className="w-full max-w-md rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500"
-              placeholder={t("common.storefront.fullNameExample")}
+              placeholder={t("storefront.fullNameExample")}
             />
           </div>
           <div>
-            <span className="mb-1 block text-xs font-medium text-slate-600">{t("common.storefront.starCount")}</span>
+            <span className="mb-1 block text-xs font-medium text-slate-600">{t("storefront.starCount")}</span>
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((n) => (
                 <button
@@ -149,7 +149,7 @@ export default function ProductReviewsSection({ productId }: ProductReviewsSecti
                   type="button"
                   onClick={() => setRatingPick(n)}
                   className="rounded p-0.5 text-amber-500 transition hover:scale-110"
-                  aria-label={`${n} ${t("common.storefront.star")}`}
+                  aria-label={`${n} ${t("storefront.star")}`}
                 >
                   <Star
                     className={`h-7 w-7 ${n <= ratingPick ? "fill-current" : "fill-none stroke-current opacity-30"}`}
@@ -159,14 +159,14 @@ export default function ProductReviewsSection({ productId }: ProductReviewsSecti
             </div>
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-slate-600">{t("common.storefront.content")}</label>
+            <label className="mb-1 block text-xs font-medium text-slate-600">{t("storefront.content")}</label>
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               maxLength={2000}
               rows={4}
               className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500"
-              placeholder={t("common.storefront.reviewPlaceholder")}
+              placeholder={t("storefront.reviewPlaceholder")}
             />
           </div>
           <button
@@ -174,7 +174,7 @@ export default function ProductReviewsSection({ productId }: ProductReviewsSecti
             disabled={submitting}
             className="rounded-lg bg-red-600 px-5 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
           >
-            {submitting ? t("common.storefront.submitting") : t("common.storefront.submitReview")}
+            {submitting ? t("storefront.submitting") : t("storefront.submitReview")}
           </button>
         </form>
       </div>
@@ -185,7 +185,7 @@ export default function ProductReviewsSection({ productId }: ProductReviewsSecti
           <div className="h-16 rounded-lg bg-slate-100" />
         </div>
       ) : items.length === 0 ? (
-        <p className="text-sm text-slate-500">{t("common.storefront.noReviewYet")}</p>
+        <p className="text-sm text-slate-500">{t("storefront.noReviewYet")}</p>
       ) : (
         <ul className="space-y-4">
           {items.map((r) => (
@@ -217,7 +217,7 @@ export default function ProductReviewsSection({ productId }: ProductReviewsSecti
             <ChevronLeft className="h-4 w-4" />
           </button>
           <span className="text-sm text-slate-600">
-            {t("common.storefront.page")} {page} / {totalPages}
+            {t("storefront.page")} {page} / {totalPages}
           </span>
           <button
             type="button"

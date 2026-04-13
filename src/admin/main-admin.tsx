@@ -8,7 +8,7 @@ import AdminApp from "./AdminApp";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/admin">
       <AdminApp />
       <Toaster position="top-center" toastOptions={{ duration: 3500 }} />
     </BrowserRouter>

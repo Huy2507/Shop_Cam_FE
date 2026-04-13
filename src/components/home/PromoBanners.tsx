@@ -1,4 +1,5 @@
 import type { Banner } from "../../types/home";
+import { resolveMediaUrl } from "@utils/mediaUrl";
 
 interface PromoBannersProps {
   banners: Banner[];
@@ -17,7 +18,7 @@ const PromoBanners = ({ banners }: PromoBannersProps) => {
         >
           <div className="relative aspect-[280/120] overflow-hidden">
             <img
-              src={banner.urlimg}
+              src={resolveMediaUrl(banner.urlimg)}
               alt={banner.title || "Promo"}
               className="h-full w-full object-cover"
             />

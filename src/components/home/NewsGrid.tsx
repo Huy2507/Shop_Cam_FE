@@ -1,6 +1,7 @@
 import type { NewsItem } from "../../types/home";
 import type { NewsPageLayout, NewsVisualTemplate } from "../../types/siteUi";
 import { getNewsVisualSkin, normalizeNewsVisualTemplate } from "./newsVisualSkins";
+import { resolveMediaUrl } from "@utils/mediaUrl";
 import { Link } from "react-router-dom";
 
 const gridColsClass: Record<2 | 3 | 4, string> = {
@@ -49,7 +50,7 @@ const NewsGrid = ({
             <li key={item.id}>
               <Link to={`/tin-tuc/${item.id}`} className={s.listItemLink}>
                 <div className={s.listThumb}>
-                  <img src={item.imageUrl} alt="" className="h-full w-full object-cover" />
+                  <img src={resolveMediaUrl(item.imageUrl)} alt="" className="h-full w-full object-cover" />
                 </div>
                 <div className="min-w-0 flex-1 py-1">
                   <h3 className={s.listTitle}>{item.title}</h3>
@@ -72,7 +73,7 @@ const NewsGrid = ({
           {news.map((item) => (
             <Link key={item.id} to={`/tin-tuc/${item.id}`} className={s.cardSmWrapper}>
               <div className={s.cardSmInner}>
-                <img src={item.imageUrl} alt={item.title} className={s.cardSmImg} />
+                <img src={resolveMediaUrl(item.imageUrl)} alt={item.title} className={s.cardSmImg} />
                 <div className={s.cardSmOverlay} />
                 <h3 className={s.cardSmTitle}>{item.title}</h3>
               </div>
@@ -95,7 +96,7 @@ const NewsGrid = ({
             <Link to={`/tin-tuc/${featured.id}`} className={`${s.featureInner} group`}>
               <div className={s.featureImg}>
                 <img
-                  src={featured.imageUrl}
+                  src={resolveMediaUrl(featured.imageUrl)}
                   alt={featured.title}
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 />
@@ -109,7 +110,7 @@ const NewsGrid = ({
         {rest.slice(0, 6).map((item) => (
           <Link key={item.id} to={`/tin-tuc/${item.id}`} className={s.cardSmWrapper}>
             <div className={s.cardSmInner}>
-              <img src={item.imageUrl} alt={item.title} className={s.cardSmImg} />
+              <img src={resolveMediaUrl(item.imageUrl)} alt={item.title} className={s.cardSmImg} />
               <div className={s.cardSmOverlay} />
               <h3 className={s.cardSmTitle}>{item.title}</h3>
             </div>

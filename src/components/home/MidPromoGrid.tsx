@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { resolveMediaUrl } from "@utils/mediaUrl";
 
 export interface MidPromoItem {
   id: string;
@@ -24,9 +25,9 @@ export default function MidPromoGrid({ items }: MidPromoGridProps) {
   const useDefault = items === undefined;
   const resolvedItems: MidPromoItem[] = useDefault
     ? [
-        { ...DEFAULT_PROMOS[0], title: t("common.storefront.midPromo1") },
-        { ...DEFAULT_PROMOS[1], title: t("common.storefront.midPromo2") },
-        { ...DEFAULT_PROMOS[2], title: t("common.storefront.midPromo3") },
+        { ...DEFAULT_PROMOS[0], title: t("storefront.midPromo1") },
+        { ...DEFAULT_PROMOS[1], title: t("storefront.midPromo2") },
+        { ...DEFAULT_PROMOS[2], title: t("storefront.midPromo3") },
       ]
     : items;
 
@@ -43,7 +44,7 @@ export default function MidPromoGrid({ items }: MidPromoGridProps) {
             className="block overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md dark:border-slate-700 dark:bg-slate-900"
           >
             <div className="relative aspect-[4/1.5] overflow-hidden">
-              <img src={item.img} alt={item.title} className="h-full w-full object-cover" />
+              <img src={resolveMediaUrl(item.img)} alt={item.title} className="h-full w-full object-cover" />
               <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                 <p className="text-center text-sm font-semibold text-white">{item.title}</p>
               </div>
