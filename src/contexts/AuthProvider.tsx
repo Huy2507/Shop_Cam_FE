@@ -42,20 +42,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    const authPages = new Set([
-      "/login",
-      "/forgot-password",
-      "/verify-otp",
-      "/change-password",
-    ]);
-
-    if (authPages.has(location.pathname)) {
-      // Ở các trang auth không cần call current-user để tránh vòng lặp 401/refresh.
-      setLoading(false);
-      return;
-    }
-
-    void fetchUserInfo();
+    // Storefront không tự gọi current-user khi mount để tránh redirect /login ngoài ý muốn.
+    // current-user chỉ nên được kiểm tra ở luồng admin (AdminRequireAuth).
+    setLoading(false);
   }, [location.pathname]);
 
   return (
