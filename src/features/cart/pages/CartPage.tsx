@@ -6,9 +6,11 @@ import { formatVnd } from "@utils/formatVnd";
 import { getUnitPriceAfterDiscount, hasActiveDiscount } from "@utils/productPricing";
 import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export default function CartPage() {
+  const { t } = useTranslation();
   const { items, totalCount, totalAmount, updateQuantity, removeItem } = useCart();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
 
@@ -16,17 +18,17 @@ export default function CartPage() {
     <div className="flex min-h-screen flex-col bg-slate-50">
       <Header />
       <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-6">
-        <h1 className="mb-6 text-2xl font-bold text-slate-800">Giỏ hàng</h1>
+        <h1 className="mb-6 text-2xl font-bold text-slate-800">{t("common.storefront.cart")}</h1>
 
         {items.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white py-16 text-center">
             <ShoppingBag className="mb-4 h-16 w-16 text-slate-300" />
-            <p className="mb-2 text-slate-600">Giỏ hàng trống</p>
+            <p className="mb-2 text-slate-600">{t("common.storefront.emptyCart")}</p>
             <Link
               to="/products"
               className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
             >
-              Mua sắm ngay
+              {t("common.storefront.shopNow")}
             </Link>
           </div>
         ) : (
@@ -63,7 +65,7 @@ export default function CartPage() {
                             type="button"
                             onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                             className="flex h-8 w-8 items-center justify-center text-slate-600 hover:bg-slate-50"
-                            aria-label="Giảm số lượng"
+                            aria-label={t("common.storefront.decreaseQuantity")}
                           >
                             <Minus className="h-4 w-4" />
                           </button>
@@ -74,7 +76,7 @@ export default function CartPage() {
                             type="button"
                             onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                             className="flex h-8 w-8 items-center justify-center text-slate-600 hover:bg-slate-50"
-                            aria-label="Tăng số lượng"
+                            aria-label={t("common.storefront.increaseQuantity")}
                           >
                             <Plus className="h-4 w-4" />
                           </button>
@@ -83,14 +85,14 @@ export default function CartPage() {
                           type="button"
                           onClick={() => removeItem(item.productId)}
                           className="rounded p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600"
-                          aria-label="Xoá khỏi giỏ"
+                          aria-label={t("common.storefront.removeFromCart")}
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
                     </div>
                     <div className="shrink-0 text-right">
-                      <p className="text-sm text-slate-600">Thành tiền</p>
+                      <p className="text-sm text-slate-600">{t("common.storefront.lineTotal")}</p>
                       <p className="font-bold text-red-600">{formatVnd(lineTotal)}</p>
                     </div>
                   </li>
@@ -100,11 +102,11 @@ export default function CartPage() {
 
             <div className="mt-8 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
               <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-                <span className="text-slate-600">Tổng số lượng</span>
-                <span className="font-medium">{totalCount} sản phẩm</span>
+                <span className="text-slate-600">{t("common.storefront.totalQuantity")}</span>
+                <span className="font-medium">{totalCount} {t("common.storefront.products")}</span>
               </div>
               <div className="mt-3 flex items-center justify-between">
-                <span className="text-lg font-medium text-slate-800">Tổng thanh toán</span>
+                <span className="text-lg font-medium text-slate-800">{t("common.storefront.totalPayment")}</span>
                 <span className="text-xl font-bold text-red-600">
                   {formatVnd(totalAmount)}
                 </span>
@@ -114,16 +116,20 @@ export default function CartPage() {
                   to="/products"
                   className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
                 >
-                  Tiếp tục mua
+                  {t("common.storefront.continueShopping")}
                 </Link>
                 <button
                   type="button"
                   className="rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white hover:bg-red-700"
                   onClick={() => setCheckoutOpen(true)}
                   disabled={items.length === 0}
-                  title={items.length === 0 ? "Giỏ hàng trống" : "Nhập thông tin và đặt hàng"}
+                  title={
+                    items.length === 0
+                      ? t("common.storefront.emptyCart")
+                      : t("common.storefront.enterInfoToOrder")
+                  }
                 >
-                  Đặt hàng
+                  {t("common.storefront.order")}
                 </button>
               </div>
             </div>

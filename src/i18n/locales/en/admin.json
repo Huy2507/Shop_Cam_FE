@@ -1,0 +1,14 @@
+{
+  "title": "Admin",
+  "nav": {
+    "orders": "Orders",
+    "products": "Products",
+    "categories": "Categories",
+    "banners": "Banners",
+    "settings": "Site settings"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark"
+  }
+}

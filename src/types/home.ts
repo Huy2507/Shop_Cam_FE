@@ -5,6 +5,12 @@ export interface Banner {
   link?: string;
 }
 
+export interface CategoryMenu {
+  id: string;
+  name: string;
+  slug?: string;
+}
+
 export interface Product {
   id: string;
   name: string;

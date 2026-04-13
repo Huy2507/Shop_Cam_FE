@@ -4,9 +4,11 @@ import Header from "@components/layout/Header";
 import { getNewsById } from "@services/homeApi";
 import type { NewsDetail } from "../../../types/home";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
 export default function NewsDetailPage() {
+  const { t, i18n } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const [detail, setDetail] = useState<NewsDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -15,7 +17,7 @@ export default function NewsDetailPage() {
   useEffect(() => {
     if (!id) {
       setLoading(false);
-      setError("Thiếu mã bài viết.");
+      setError(t("common.storefront.missingNewsId"));
       return;
     }
     let cancelled = false;
@@ -26,7 +28,7 @@ export default function NewsDetailPage() {
         const data = await getNewsById(id);
         if (!cancelled) setDetail(data);
       } catch {
-        if (!cancelled) setError("Không tải được bài viết. Vui lòng thử lại sau.");
+        if (!cancelled) setError(t("common.storefront.errors.loadNewsDetail"));
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -40,15 +42,15 @@ export default function NewsDetailPage() {
     () =>
       detail
         ? [
-            { label: "Trang chủ", to: "/" },
+            { label: t("common.storefront.home"), to: "/" },
             { label: "Blog", to: "/blog" },
             { label: detail.title },
           ]
         : [
-            { label: "Trang chủ", to: "/" },
+            { label: t("common.storefront.home"), to: "/" },
             { label: "Blog", to: "/blog" },
           ],
-    [detail],
+    [detail, t],
   );
 
   return (
@@ -79,11 +81,14 @@ export default function NewsDetailPage() {
               <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">{detail.title}</h1>
               {detail.publishedAt && (
                 <p className="mt-2 text-sm text-slate-500">
-                  {new Date(detail.publishedAt).toLocaleDateString("vi-VN", {
+                  {new Date(detail.publishedAt).toLocaleDateString(
+                    i18n.language?.startsWith("vi") ? "vi-VN" : "en-US",
+                    {
                     day: "2-digit",
                     month: "2-digit",
                     year: "numeric",
-                  })}
+                    },
+                  )}
                 </p>
               )}
               {detail.excerpt && (
@@ -91,7 +96,7 @@ export default function NewsDetailPage() {
               )}
               <div className="prose prose-slate mt-6 max-w-none">
                 <div className="whitespace-pre-wrap text-base leading-relaxed text-slate-700">
-                  {detail.body?.trim() || "Nội dung đang được cập nhật."}
+                  {detail.body?.trim() || t("common.storefront.newsContentUpdating")}
                 </div>
               </div>
               <div className="mt-8 border-t border-slate-100 pt-6">
@@ -99,7 +104,7 @@ export default function NewsDetailPage() {
                   to="/blog"
                   className="text-sm font-medium text-red-600 hover:text-red-700 hover:underline"
                 >
-                  ← Quay lại danh sách tin
+                  {t("common.storefront.backToNews")}
                 </Link>
               </div>
             </div>

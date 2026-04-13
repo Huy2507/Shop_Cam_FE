@@ -5,6 +5,7 @@
 import type {
   Banner,
   CatalogResponse,
+  CategoryMenu,
   NewsDetail,
   NewsItem,
   Product,
@@ -27,6 +28,12 @@ export async function getPromoBanners(): Promise<Banner[]> {
   return res.data;
 }
 
+/** Lấy danh mục menu từ BE */
+export async function getMenuCategories(): Promise<CategoryMenu[]> {
+  const res = await api.get<CategoryMenu[]>(`${HOME_API_BASE}/categories`);
+  return res.data;
+}
+
 /** Lấy danh sách sản phẩm (filter: best | hot | combo) — trang chủ */
 export async function getProducts(filter?: string): Promise<Product[]> {
   const res = await api.get<Product[]>(`${HOME_API_BASE}/products`, {
@@ -41,9 +48,25 @@ export async function getNewProducts(): Promise<Product[]> {
   return res.data;
 }
 
-/** Lấy tin tức */
-export async function getNews(): Promise<NewsItem[]> {
-  const res = await api.get<NewsItem[]>(`${HOME_API_BASE}/news`);
+export interface NewsFeedResponse {
+  items: NewsItem[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+/** Danh sách tin có phân trang (mặc định page=1, pageSize=10 — khớp block trang chủ). */
+export async function getNews(params?: {
+  page?: number;
+  pageSize?: number;
+}): Promise<NewsFeedResponse> {
+  const res = await api.get<NewsFeedResponse>(`${HOME_API_BASE}/news`, {
+    params: {
+      page: params?.page ?? 1,
+      pageSize: params?.pageSize ?? 10,
+    },
+  });
   return res.data;
 }
 
