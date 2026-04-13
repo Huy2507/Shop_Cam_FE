@@ -21,6 +21,8 @@ export interface HomeMidPromoCard {
 }
 
 export interface HomePageConfig {
+  /** Bố cục danh mục ở trang chủ (được admin cấu hình). */
+  categoryLayout: "navbar" | "sidebar_no_promo";
   showBannerBlock: boolean;
   showPromoSidebar: boolean;
   showMidPromo: boolean;

@@ -67,6 +67,7 @@ function asPaged<T>(raw: unknown): PagedResult<T> {
 
 export interface AdminProductListItem {
   productId: string;
+  productCode: string;
   name: string;
   price: number;
   discount?: number | null;
@@ -92,6 +93,7 @@ export interface AdminUpsertProduct {
 
 export interface AdminProductDetail extends AdminUpsertProduct {
   productId: string;
+  productCode: string;
   categoryName?: string | null;
 }
 
@@ -100,6 +102,11 @@ export async function getAdminProductsPaged(params: {
   pageSize: number;
   search?: string;
   categoryId?: string;
+  productCode?: string;
+  isNew?: boolean;
+  outOfStock?: boolean;
+  minPrice?: number;
+  maxPrice?: number;
 }): Promise<PagedResult<AdminProductListItem>> {
   const res = await api.get("/api/admin/products", {
     params: {
@@ -107,6 +114,11 @@ export async function getAdminProductsPaged(params: {
       pageSize: params.pageSize,
       search: params.search || undefined,
       categoryId: params.categoryId || undefined,
+      productCode: params.productCode || undefined,
+      isNew: params.isNew,
+      outOfStock: params.outOfStock,
+      minPrice: params.minPrice,
+      maxPrice: params.maxPrice,
     },
   });
   return asPaged<AdminProductListItem>(res.data);
@@ -139,6 +151,7 @@ export async function deleteAdminProduct(id: string): Promise<void> {
 
 export interface AdminCategoryListItem {
   productCategoryId: string;
+  categoryCode: string;
   name: string;
   slug?: string | null;
   productCount: number;
@@ -165,12 +178,14 @@ export async function getAdminCategoriesPaged(params: {
   page: number;
   pageSize: number;
   search?: string;
+  categoryCode?: string;
 }): Promise<PagedResult<AdminCategoryListItem>> {
   const res = await api.get("/api/admin/categories", {
     params: {
       page: params.page,
       pageSize: params.pageSize,
       search: params.search || undefined,
+      categoryCode: params.categoryCode || undefined,
     },
   });
   return asPaged<AdminCategoryListItem>(res.data);
@@ -178,6 +193,7 @@ export async function getAdminCategoriesPaged(params: {
 
 export async function getAdminCategory(id: string): Promise<{
   productCategoryId: string;
+  categoryCode: string;
   name: string;
   slug?: string | null;
 }> {
@@ -214,6 +230,70 @@ export interface AdminBannerListItem {
   displayOrder: number;
 }
 
+// --- Side Ads ---
+export interface AdminSideAdListItem {
+  sideAdId: string;
+  code: string;
+  name: string;
+  position: "left" | "right";
+  imageUrl: string;
+  link?: string | null;
+  openInNewTab: boolean;
+  displayOrder: number;
+  startTime?: string | null;
+  endTime?: string | null;
+  isActive: boolean;
+}
+
+export interface AdminUpsertSideAd {
+  name: string;
+  position: "left" | "right";
+  imageUrl: string;
+  link?: string | null;
+  openInNewTab: boolean;
+  displayOrder: number;
+  startTime?: string | null;
+  endTime?: string | null;
+  isActive: boolean;
+}
+
+export async function getAdminSideAdsPaged(params: {
+  page: number;
+  pageSize: number;
+  search?: string;
+  position?: "left" | "right";
+  isActive?: boolean;
+}): Promise<PagedResult<AdminSideAdListItem>> {
+  const res = await api.get("/api/admin/side-ads", {
+    params: {
+      page: params.page,
+      pageSize: params.pageSize,
+      search: params.search || undefined,
+      position: params.position || undefined,
+      isActive: params.isActive,
+    },
+  });
+  return asPaged<AdminSideAdListItem>(res.data);
+}
+
+export async function getAdminSideAd(id: string): Promise<AdminSideAdListItem> {
+  const res = await api.get<AdminSideAdListItem>(`/api/admin/side-ads/${id}`);
+  return res.data;
+}
+
+export async function createAdminSideAd(body: AdminUpsertSideAd): Promise<{ id: string; code: string }> {
+  const res = await api.post<{ id: string; code: string }>("/api/admin/side-ads", body);
+  return res.data;
+}
+
+export async function updateAdminSideAd(id: string, body: AdminUpsertSideAd): Promise<void> {
+  await api.put(`/api/admin/side-ads/${id}`, body);
+}
+
+export async function deleteAdminSideAd(id: string): Promise<void> {
+  await api.delete(`/api/admin/side-ads/${id}`);
+}
+
 export interface AdminUpsertBanner {
   urlImg: string;
   title?: string | null;
@@ -226,12 +306,14 @@ export async function getAdminBannersPaged(params: {
   page: number;
   pageSize: number;
   search?: string;
+  isMain?: boolean;
 }): Promise<PagedResult<AdminBannerListItem>> {
   const res = await api.get("/api/admin/banners", {
     params: {
       page: params.page,
       pageSize: params.pageSize,
       search: params.search || undefined,
+      isMain: params.isMain,
     },
   });
   return asPaged<AdminBannerListItem>(res.data);
@@ -265,6 +347,10 @@ export async function deleteAdminBanner(id: string): Promise<void> {
 export interface AdminOrderListItem {
   orderId: string;
   code: string;
+  orderStatusId: string;
+  orderStatusCode: string;
+  orderStatusName: string;
+  orderStatusColorHex?: string | null;
   customerName: string;
   phone: string;
   email?: string | null;
@@ -275,6 +361,10 @@ export interface AdminOrderListItem {
 export interface AdminOrderDetail {
   orderId: string;
   code: string;
+  orderStatusId: string;
+  orderStatusCode: string;
+  orderStatusName: string;
+  orderStatusColorHex?: string | null;
   customerName: string;
   phone: string;
   email?: string | null;
@@ -292,16 +382,39 @@ export interface AdminOrderDetail {
   }[];
 }
 
+export interface AdminOrderStatus {
+  orderStatusId: string;
+  code: string;
+  name: string;
+  colorHex?: string | null;
+  displayOrder: number;
+  isTerminal: boolean;
+}
+
 export async function getAdminOrdersPaged(params: {
   page: number;
   pageSize: number;
   search?: string;
+  orderStatusId?: string;
+  code?: string;
+  phone?: string;
+  minTotalAmount?: number;
+  maxTotalAmount?: number;
+  createdFrom?: string;
+  createdTo?: string;
 }): Promise<PagedResult<AdminOrderListItem>> {
   const res = await api.get("/api/admin/orders", {
     params: {
       page: params.page,
       pageSize: params.pageSize,
       search: params.search || undefined,
+      orderStatusId: params.orderStatusId || undefined,
+      code: params.code || undefined,
+      phone: params.phone || undefined,
+      minTotalAmount: params.minTotalAmount,
+      maxTotalAmount: params.maxTotalAmount,
+      createdFrom: params.createdFrom || undefined,
+      createdTo: params.createdTo || undefined,
     },
   });
   return asPaged<AdminOrderListItem>(res.data);
@@ -309,5 +422,23 @@ export async function getAdminOrdersPaged(params: {
 
 export async function getAdminOrder(id: string): Promise<AdminOrderDetail> {
   const res = await api.get<AdminOrderDetail>(`/api/admin/orders/${id}`);
+  return res.data;
+}
+
+export async function getAdminOrderStatuses(): Promise<AdminOrderStatus[]> {
+  const res = await api.get<AdminOrderStatus[]>("/api/admin/order-statuses");
+  return res.data;
+}
+
+export async function updateAdminOrderStatus(orderId: string, orderStatusId: string): Promise<void> {
+  await api.put(`/api/admin/orders/${orderId}/status`, { orderStatusId });
+}
+
+export async function uploadAdminImage(file: File): Promise<{ url: string; absoluteUrl: string; size: number }> {
+  const form = new FormData();
+  form.append("file", file);
+  const res = await api.post<{ url: string; absoluteUrl: string; size: number }>("/api/admin/uploads/images", form, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
   return res.data;
 }

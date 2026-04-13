@@ -12,20 +12,42 @@ import type {
   ProductDetail,
   ProductReviewsResponse,
 } from "../types/home";
+import { resolveMediaUrl } from "@utils/mediaUrl";
 import api from "./axiosConfig";
 
 const HOME_API_BASE = "/api/home";
 
+const mapBanner = (x: Banner): Banner => ({ ...x, urlimg: resolveMediaUrl(x.urlimg) });
+const mapProduct = (x: Product): Product => ({ ...x, imageUrl: resolveMediaUrl(x.imageUrl) });
+const mapNewsItem = (x: NewsItem): NewsItem => ({ ...x, imageUrl: resolveMediaUrl(x.imageUrl) });
+const mapNewsDetail = (x: NewsDetail): NewsDetail => ({ ...x, imageUrl: resolveMediaUrl(x.imageUrl) });
+
 /** Lấy banner chính (Banner.urlimg từ BE) */
 export async function getBanners(): Promise<Banner[]> {
   const res = await api.get<Banner[]>(`${HOME_API_BASE}/banners`);
-  return res.data;
+  return res.data.map(mapBanner);
 }
 
 /** Lấy banner khuyến mãi bên phải */
 export async function getPromoBanners(): Promise<Banner[]> {
   const res = await api.get<Banner[]>(`${HOME_API_BASE}/promo-banners`);
-  return res.data;
+  return res.data.map(mapBanner);
+}
+
+export interface SideAdItem {
+  code: string;
+  name: string;
+  position: "left" | "right";
+  imageUrl: string;
+  link?: string | null;
+  openInNewTab: boolean;
+}
+
+export async function getSideAds(position?: "left" | "right"): Promise<SideAdItem[]> {
+  const res = await api.get<SideAdItem[]>(`${HOME_API_BASE}/side-ads`, {
+    params: { position: position || undefined },
+  });
+  return res.data.map((x) => ({ ...x, imageUrl: resolveMediaUrl(x.imageUrl) }));
 }
 
 /** Lấy danh mục menu từ BE */
@@ -39,13 +61,13 @@ export async function getProducts(filter?: string): Promise<Product[]> {
   const res = await api.get<Product[]>(`${HOME_API_BASE}/products`, {
     params: { filter },
   });
-  return res.data;
+  return res.data.map(mapProduct);
 }
 
 /** Lấy sản phẩm mới (isNew) */
 export async function getNewProducts(): Promise<Product[]> {
   const res = await api.get<Product[]>(`${HOME_API_BASE}/new-products`);
-  return res.data;
+  return res.data.map(mapProduct);
 }
 
 export interface NewsFeedResponse {
@@ -67,19 +89,19 @@ export async function getNews(params?: {
       pageSize: params?.pageSize ?? 10,
     },
   });
-  return res.data;
+  return { ...res.data, items: res.data.items.map(mapNewsItem) };
 }
 
 /** Chi tiết tin */
 export async function getNewsById(id: string): Promise<NewsDetail> {
   const res = await api.get<NewsDetail>(`${HOME_API_BASE}/news/${id}`);
-  return res.data;
+  return mapNewsDetail(res.data);
 }
 
 /** Chi tiết sản phẩm (PDP) */
 export async function getProductById(id: string): Promise<ProductDetail> {
   const res = await api.get<ProductDetail>(`${HOME_API_BASE}/product/${id}`);
-  return res.data;
+  return { ...res.data, imageUrl: resolveMediaUrl(res.data.imageUrl) };
 }
 
 /** Sản phẩm liên quan */
@@ -87,7 +109,7 @@ export async function getRelatedProducts(productId: string): Promise<Product[]> 
   const res = await api.get<Product[]>(
     `${HOME_API_BASE}/product/${productId}/related`,
   );
-  return res.data;
+  return res.data.map(mapProduct);
 }
 
 export interface CatalogParams {
@@ -116,7 +138,7 @@ export async function getCatalog(params: CatalogParams): Promise<CatalogResponse
       maxPrice: params.maxPrice,
     },
   });
-  return res.data;
+  return { ...res.data, items: res.data.items.map(mapProduct) };
 }
 
 export async function getProductReviews(

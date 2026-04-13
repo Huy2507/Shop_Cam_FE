@@ -21,7 +21,24 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
-    plugins: [react(), tsconfigPaths(), ViteMinifyPlugin({})],
+    plugins: [
+      react(),
+      tsconfigPaths(),
+      ViteMinifyPlugin({}),
+      {
+        name: "admin-html-rewrite",
+        configureServer(server) {
+          server.middlewares.use((req, _res, next) => {
+            const url = req.url ?? "";
+            const hasFileExt = /\.[a-zA-Z0-9]+($|\?)/.test(url);
+            if ((url === "/admin" || url.startsWith("/admin/")) && !hasFileExt) {
+              req.url = "/admin.html";
+            }
+            next();
+          });
+        },
+      },
+    ],
     server: {
       proxy: {
         "/api": apiProxy,
