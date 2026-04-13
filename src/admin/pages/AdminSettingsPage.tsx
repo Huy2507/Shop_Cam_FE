@@ -297,9 +297,10 @@ export default function AdminSettingsPage() {
         );
         for (const def of UI_KEYS) {
           const row = uiRows.find((r) => r.key === def.key);
-          nextUi[def.key] = row
+          const parsed = row
             ? parseJsonString(row.valueJson, def.defaultValue)
             : def.defaultValue;
+          nextUi[def.key] = normalizeByCatalog(def, parsed);
         }
         setUiValues(nextUi);
 
@@ -308,9 +309,10 @@ export default function AdminSettingsPage() {
         );
         for (const def of INTEGRATION_KEYS) {
           const row = intRows.find((r) => r.key === def.key);
-          nextInt[def.key] = row
+          const parsed = row
             ? parseJsonString(row.valueJson, def.defaultValue)
             : def.defaultValue;
+          nextInt[def.key] = normalizeByCatalog(def, parsed);
         }
         setIntValues(nextInt);
 
@@ -319,9 +321,10 @@ export default function AdminSettingsPage() {
         );
         for (const def of NEWS_PAGE_KEYS) {
           const row = newsRows.find((r) => r.key === def.key);
-          nextNews[def.key] = row
+          const parsed = row
             ? parseJsonString(row.valueJson, def.defaultValue)
             : def.defaultValue;
+          nextNews[def.key] = normalizeByCatalog(def, parsed);
         }
         setNewsValues(nextNews);
 
@@ -330,9 +333,10 @@ export default function AdminSettingsPage() {
         );
         for (const def of HOME_PAGE_KEYS) {
           const row = homeRows.find((r) => r.key === def.key);
-          nextHome[def.key] = row
+          const parsed = row
             ? parseJsonString(row.valueJson, def.defaultValue)
             : def.defaultValue;
+          nextHome[def.key] = normalizeByCatalog(def, parsed);
         }
         setHomeValues(nextHome);
       } catch {
@@ -358,6 +362,87 @@ export default function AdminSettingsPage() {
 
   const handleHomeChange = (key: string, v: string) => {
     setHomeValues((prev) => ({ ...prev, [key]: v }));
+  };
+
+  const renderField = (
+    def: FieldDef,
+    value: string,
+    onChange: (key: string, value: string) => void,
+  ) => {
+    if (def.type === "checkbox") {
+      const checked = isTrue(value);
+      return (
+        <label className="mt-1 flex cursor-pointer items-center gap-3 rounded border border-slate-700 bg-slate-900 px-3 py-2">
+          <input
+            type="checkbox"
+            checked={checked}
+            onChange={(e) => onChange(def.key, e.target.checked ? "true" : "false")}
+            className="h-4 w-4 accent-[var(--site-primary,#dc2626)]"
+          />
+          <span className="text-sm text-slate-200">{checked ? "Đang bật" : "Đang tắt"}</span>
+        </label>
+      );
+    }
+
+    if (def.type === "radio" && def.options?.length) {
+      return (
+        <div className="mt-2 space-y-2">
+          {def.options.map((opt) => (
+            <label
+              key={opt.value}
+              className="flex cursor-pointer items-center gap-3 rounded border border-slate-700 bg-slate-900 px-3 py-2"
+            >
+              <input
+                type="radio"
+                name={def.key}
+                checked={value === opt.value}
+                onChange={() => onChange(def.key, opt.value)}
+                className="h-4 w-4 accent-[var(--site-primary,#dc2626)]"
+              />
+              <span className="text-sm text-slate-200">{opt.label}</span>
+            </label>
+          ))}
+        </div>
+      );
+    }
+
+    if (def.type === "select" && def.options?.length) {
+      return (
+        <select
+          value={value}
+          onChange={(e) => onChange(def.key, e.target.value)}
+          className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-slate-100"
+        >
+          {def.options.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      );
+    }
+
+    if (def.type === "textarea") {
+      return (
+        <textarea
+          value={value}
+          onChange={(e) => onChange(def.key, e.target.value)}
+          rows={def.rows ?? 4}
+          className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 font-mono text-xs text-slate-100"
+          placeholder={def.defaultValue}
+        />
+      );
+    }
+
+    return (
+      <input
+        type={def.type === "url" ? "url" : "text"}
+        value={value}
+        onChange={(e) => onChange(def.key, e.target.value)}
+        className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-slate-100"
+        placeholder={def.defaultValue}
+      />
+    );
   };
 
   const saveUi = async (e: React.FormEvent) => {
@@ -546,13 +631,7 @@ export default function AdminSettingsPage() {
               {def.hint && (
                 <span className="mb-1 block text-xs text-slate-500">{def.hint}</span>
               )}
-              <input
-                type={def.type === "url" ? "url" : "text"}
-                value={intValues[def.key] ?? ""}
-                onChange={(e) => handleIntChange(def.key, e.target.value)}
-                className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-slate-100"
-                placeholder={def.defaultValue}
-              />
+              {renderField(def, intValues[def.key] ?? "", handleIntChange)}
             </label>
           ))}
           <button
@@ -574,13 +653,7 @@ export default function AdminSettingsPage() {
           {NEWS_PAGE_KEYS.map((def) => (
             <label key={def.key} className="block text-sm">
               <span className="mb-1 block text-slate-300">{def.label}</span>
-              <input
-                type="text"
-                value={newsValues[def.key] ?? ""}
-                onChange={(e) => handleNewsChange(def.key, e.target.value)}
-                className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-slate-100"
-                placeholder={def.defaultValue}
-              />
+              {renderField(def, newsValues[def.key] ?? "", handleNewsChange)}
             </label>
           ))}
           <button
@@ -602,23 +675,8 @@ export default function AdminSettingsPage() {
           {HOME_PAGE_KEYS.map((def) => (
             <label key={def.key} className="block text-sm">
               <span className="mb-1 block text-slate-300">{def.label}</span>
-              {def.type === "textarea" ? (
-                <textarea
-                  value={homeValues[def.key] ?? ""}
-                  onChange={(e) => handleHomeChange(def.key, e.target.value)}
-                  rows={def.key === "home_mid_promo_json" ? 10 : 4}
-                  className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 font-mono text-xs text-slate-100"
-                  placeholder={def.defaultValue}
-                />
-              ) : (
-                <input
-                  type="text"
-                  value={homeValues[def.key] ?? ""}
-                  onChange={(e) => handleHomeChange(def.key, e.target.value)}
-                  className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-slate-100"
-                  placeholder={def.defaultValue}
-                />
-              )}
+              {def.hint && <span className="mb-1 block text-xs text-slate-500">{def.hint}</span>}
+              {renderField(def, homeValues[def.key] ?? "", handleHomeChange)}
             </label>
           ))}
           <button
