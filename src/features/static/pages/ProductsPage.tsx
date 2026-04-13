@@ -4,6 +4,7 @@ import ProductCard from "@components/home/ProductCard";
 import type { Product } from "../../../types/home";
 import { getCatalog } from "@services/homeApi";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useSearchParams } from "react-router-dom";
 
 const PAGE_SIZE = 12;
@@ -14,6 +15,7 @@ type SortKey = "newest" | "price_asc" | "price_desc" | "name";
  * Trang mua hàng online: catalog từ API (tìm kiếm, danh mục, tab bán chạy/hot/combo, sort, phân trang).
  */
 const ProductsPage = () => {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const q = searchParams.get("q") ?? "";
@@ -57,43 +59,43 @@ const ProductsPage = () => {
         setTotalPages(res.totalPages);
         setTotalCount(res.totalCount);
       } catch {
-        setError("Không tải được danh sách sản phẩm. Vui lòng thử lại sau.");
+        setError(t("common.storefront.errors.loadProducts"));
         setItems([]);
       } finally {
         setIsLoading(false);
       }
     };
     load();
-  }, [q, category, tab, sort, page]);
+  }, [q, category, tab, sort, page, t]);
 
   const titleParts: string[] = [];
-  if (q) titleParts.push(`Tìm “${q}”`);
+  if (q) titleParts.push(t("common.storefront.searchFor", { q }));
   if (category) titleParts.push(category);
   if (!q && !category) {
-    if (tab === "hot") titleParts.push("Hot sale");
-    else if (tab === "combo") titleParts.push("Combo siêu rẻ");
-    else titleParts.push("Bán chạy nhất");
+    if (tab === "hot") titleParts.push(t("common.storefront.hotSale"));
+    else if (tab === "combo") titleParts.push(t("common.storefront.comboCheap"));
+    else titleParts.push(t("common.storefront.bestSeller"));
   }
-  const pageTitle = titleParts.join(" · ") || "Sản phẩm";
+  const pageTitle = titleParts.join(" · ") || t("common.storefront.products");
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
       <Header />
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
-        <h1 className="mb-2 text-2xl font-bold text-slate-800">Mua hàng online</h1>
+        <h1 className="mb-2 text-2xl font-bold text-slate-800">{t("common.storefront.buyOnline")}</h1>
         <p className="mb-4 text-sm text-slate-600">
           {totalCount > 0 ? (
             <>
-              Tìm thấy <strong>{totalCount}</strong> sản phẩm
+              {t("common.storefront.found")} <strong>{totalCount}</strong> {t("common.storefront.products")}
               {category && (
                 <>
                   {" "}
-                  trong danh mục <strong>{category}</strong>
+                  {t("common.storefront.inCategory")} <strong>{category}</strong>
                 </>
               )}
             </>
           ) : (
-            "Khám phá camera và thiết bị an ninh."
+            t("common.storefront.exploreText")
           )}
         </p>
 
@@ -101,9 +103,9 @@ const ProductsPage = () => {
           <div className="flex flex-wrap gap-2">
             {(
               [
-                { id: "best", label: "Bán chạy nhất" },
-                { id: "hot", label: "Hot sale" },
-                { id: "combo", label: "Combo siêu rẻ" },
+                { id: "best", label: t("common.storefront.bestSeller") },
+                { id: "hot", label: t("common.storefront.hotSale") },
+                { id: "combo", label: t("common.storefront.comboCheap") },
               ] as const
             ).map((t) => (
               <button
@@ -124,7 +126,7 @@ const ProductsPage = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <label className="text-sm text-slate-600">Sắp xếp</label>
+            <label className="text-sm text-slate-600">{t("common.storefront.sort")}</label>
             <select
               value={sort}
               onChange={(e) => {
@@ -132,10 +134,10 @@ const ProductsPage = () => {
               }}
               className="rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-red-500"
             >
-              <option value="newest">Mới / nổi bật</option>
-              <option value="price_asc">Giá tăng dần</option>
-              <option value="price_desc">Giá giảm dần</option>
-              <option value="name">Tên A–Z</option>
+              <option value="newest">{t("common.storefront.sortNewest")}</option>
+              <option value="price_asc">{t("common.storefront.sortPriceAsc")}</option>
+              <option value="price_desc">{t("common.storefront.sortPriceDesc")}</option>
+              <option value="name">{t("common.storefront.sortName")}</option>
             </select>
           </div>
         </div>
@@ -154,9 +156,9 @@ const ProductsPage = () => {
           </div>
         ) : items.length === 0 ? (
           <div className="rounded-xl border border-slate-200 bg-white py-16 text-center text-slate-600">
-            <p className="mb-4">Không có sản phẩm phù hợp.</p>
+            <p className="mb-4">{t("common.storefront.noProductMatched")}</p>
             <Link to="/products" className="text-red-600 underline">
-              Xem tất cả sản phẩm
+              {t("common.storefront.viewAllProducts")}
             </Link>
           </div>
         ) : (
@@ -176,10 +178,10 @@ const ProductsPage = () => {
                   onClick={() => setParam({ page: page - 1 })}
                   className="rounded-lg border border-slate-200 px-4 py-2 text-sm disabled:opacity-40"
                 >
-                  Trước
+                  {t("common.storefront.previous")}
                 </button>
                 <span className="flex items-center px-2 text-sm text-slate-600">
-                  Trang {page} / {totalPages}
+                  {t("common.storefront.page")} {page} / {totalPages}
                 </span>
                 <button
                   type="button"
@@ -187,7 +189,7 @@ const ProductsPage = () => {
                   onClick={() => setParam({ page: page + 1 })}
                   className="rounded-lg border border-slate-200 px-4 py-2 text-sm disabled:opacity-40"
                 >
-                  Sau
+                  {t("common.storefront.next")}
                 </button>
               </div>
             )}

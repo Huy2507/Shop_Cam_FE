@@ -11,6 +11,7 @@ import { productDetailToProduct } from "@utils/mapProductDetailToProduct";
 import { getUnitPriceAfterDiscount, hasActiveDiscount } from "@utils/productPricing";
 import { Minus, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -18,6 +19,7 @@ import toast from "react-hot-toast";
  * Trang chi tiết sản phẩm (PDP): ảnh, giá, mô tả, số lượng, thêm giỏ, SP liên quan.
  */
 export default function ProductDetailPage() {
+  const { t } = useTranslation();
   const { productId } = useParams<{ productId: string }>();
   const navigate = useNavigate();
   const { addItem } = useCart();
@@ -49,7 +51,7 @@ export default function ProductDetailPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Không tải được sản phẩm.");
+          setError(t("common.storefront.errors.loadProduct"));
           setDetail(null);
         }
       } finally {
@@ -64,13 +66,13 @@ export default function ProductDetailPage() {
   const breadcrumbItems = useMemo(() => {
     if (!detail) {
       return [
-        { label: "Trang chủ", to: "/" },
-        { label: "Sản phẩm", to: "/products" },
+        { label: t("common.storefront.home"), to: "/" },
+        { label: t("common.storefront.products"), to: "/products" },
       ];
     }
     return [
-      { label: "Trang chủ", to: "/" },
-      { label: "Sản phẩm", to: "/products" },
+      { label: t("common.storefront.home"), to: "/" },
+      { label: t("common.storefront.products"), to: "/products" },
       ...(detail.categoryName
         ? [
             {
@@ -81,7 +83,7 @@ export default function ProductDetailPage() {
         : []),
       { label: detail.name },
     ];
-  }, [detail]);
+  }, [detail, t]);
 
   if (loading) {
     return (
@@ -107,9 +109,9 @@ export default function ProductDetailPage() {
       <div className="flex min-h-screen flex-col bg-slate-50">
         <Header />
         <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-12 text-center">
-          <p className="mb-4 text-slate-600">{error ?? "Không tìm thấy sản phẩm."}</p>
+          <p className="mb-4 text-slate-600">{error ?? t("common.storefront.productNotFound")}</p>
           <Link to="/products" className="text-red-600 underline">
-            Về danh sách sản phẩm
+            {t("common.storefront.backToProducts")}
           </Link>
         </main>
         <Footer />
@@ -123,7 +125,7 @@ export default function ProductDetailPage() {
   const handleAddCart = () => {
     if (detail.outOfStock) return;
     addItem(productDetailToProduct(detail), qty);
-    toast.success(`Đã thêm ${qty} sản phẩm vào giỏ hàng`);
+    toast.success(t("common.storefront.addedToCart", { qty }));
   };
 
   return (
@@ -149,9 +151,9 @@ export default function ProductDetailPage() {
             )}
             <h1 className="text-2xl font-bold text-slate-900">{detail.name}</h1>
             {detail.categoryName && (
-              <p className="mt-1 text-sm text-slate-500">Danh mục: {detail.categoryName}</p>
+              <p className="mt-1 text-sm text-slate-500">{t("common.storefront.category")}: {detail.categoryName}</p>
             )}
-            <p className="mt-1 font-mono text-xs text-slate-400">Mã: {detail.id.slice(0, 8)}…</p>
+            <p className="mt-1 font-mono text-xs text-slate-400">{t("common.storefront.code")}: {detail.id.slice(0, 8)}…</p>
 
             <div className="mt-4">
               {hasDisc ? (
@@ -169,22 +171,22 @@ export default function ProductDetailPage() {
             <div className="mt-4">
               {detail.outOfStock ? (
                 <span className="rounded bg-slate-800 px-3 py-1 text-sm font-semibold text-white">
-                  Hết hàng
+                  {t("common.storefront.outOfStock")}
                 </span>
               ) : (
-                <span className="text-sm font-medium text-emerald-600">Còn hàng</span>
+                <span className="text-sm font-medium text-emerald-600">{t("common.storefront.inStock")}</span>
               )}
             </div>
 
             {!detail.outOfStock && (
               <div className="mt-6 flex flex-wrap items-center gap-4">
-                <span className="text-sm font-medium text-slate-700">Số lượng</span>
+                <span className="text-sm font-medium text-slate-700">{t("common.storefront.quantity")}</span>
                 <div className="flex items-center rounded-lg border border-slate-200">
                   <button
                     type="button"
                     className="flex h-10 w-10 items-center justify-center hover:bg-slate-50"
                     onClick={() => setQty((q) => Math.max(1, q - 1))}
-                    aria-label="Giảm"
+                    aria-label={t("common.storefront.decrease")}
                   >
                     <Minus className="h-4 w-4" />
                   </button>
@@ -193,7 +195,7 @@ export default function ProductDetailPage() {
                     type="button"
                     className="flex h-10 w-10 items-center justify-center hover:bg-slate-50"
                     onClick={() => setQty((q) => q + 1)}
-                    aria-label="Tăng"
+                    aria-label={t("common.storefront.increase")}
                   >
                     <Plus className="h-4 w-4" />
                   </button>
@@ -203,7 +205,7 @@ export default function ProductDetailPage() {
                   onClick={handleAddCart}
                   className="rounded-lg bg-red-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-red-700"
                 >
-                  Thêm vào giỏ hàng
+                  {t("common.storefront.addToCart")}
                 </button>
               </div>
             )}
@@ -217,14 +219,13 @@ export default function ProductDetailPage() {
         </div>
 
         <section className="mt-10 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-bold text-slate-800">Mô tả & thông tin</h2>
+          <h2 className="mb-4 text-lg font-bold text-slate-800">{t("common.storefront.descriptionInfo")}</h2>
           <div className="prose prose-sm max-w-none text-slate-700">
             {detail.description ? (
               <p className="whitespace-pre-wrap">{detail.description}</p>
             ) : (
               <p className="text-slate-500">
-                Sản phẩm chính hàng, bảo hành theo chính sách Shop Cam. Liên hệ hotline để được tư vấn
-                chi tiết thông số kỹ thuật và lắp đặt.
+                {t("common.storefront.productDescriptionFallback")}
               </p>
             )}
           </div>
@@ -234,7 +235,7 @@ export default function ProductDetailPage() {
 
         {related.length > 0 && (
           <section className="mt-10">
-            <h2 className="mb-4 text-lg font-bold text-slate-800">Sản phẩm liên quan</h2>
+            <h2 className="mb-4 text-lg font-bold text-slate-800">{t("common.storefront.relatedProducts")}</h2>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               {related.map((p) => (
                 <ProductCard key={p.id} product={p} />
