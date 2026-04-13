@@ -96,6 +96,14 @@ const NEWS_PAGE_KEYS = [
 
 const HOME_PAGE_KEYS = [
   {
+    key: "home_category_layout",
+    label: "Bố cục danh mục trang chủ (navbar | sidebar_no_promo)",
+    hint:
+      "navbar: danh mục nằm trên thanh menu (dropdown). sidebar_no_promo: danh mục nằm cạnh banner và ẩn cột promo phải để banner rộng.",
+    type: "text" as const,
+    defaultValue: "navbar",
+  },
+  {
     key: "home_show_banner_block",
     label: "Hiện banner chính (carousel)",
     type: "text" as const,
@@ -320,7 +328,7 @@ export default function AdminSettingsPage() {
         valueJson: JSON.stringify(newsValues[def.key] ?? ""),
       }));
       await putAdminSiteSettings(items);
-      toast.success("Đã lưu cấu hình trang tin (áp qua /api/home/ui-config).");
+      toast.success("Đã lưu cấu hình trang tin.");
     } catch {
       toast.error("Lưu thất bại.");
     } finally {
@@ -338,7 +346,7 @@ export default function AdminSettingsPage() {
         valueJson: JSON.stringify(homeValues[def.key] ?? ""),
       }));
       await putAdminSiteSettings(items);
-      toast.success("Đã lưu cấu hình trang chủ (áp qua /api/home/ui-config).");
+      toast.success("Đã lưu cấu hình trang chủ.");
     } catch {
       toast.error("Lưu thất bại.");
     } finally {
@@ -355,9 +363,7 @@ export default function AdminSettingsPage() {
       <div>
         <h1 className="text-xl font-semibold">Cấu hình site</h1>
         <p className="mt-1 text-sm text-slate-400">
-          Storefront đọc qua{" "}
-          <code className="rounded bg-slate-800 px-1">/api/home/ui-config</code> (giao diện, Zalo, trang chủ, trang
-          tin).
+          Cấu hình này được áp dụng cho giao diện storefront (giao diện, Zalo, trang chủ, trang tin).
         </p>
       </div>
 

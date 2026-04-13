@@ -1,36 +1,25 @@
 import { useCallback, useState } from "react";
+import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import { resolveMediaUrl } from "@utils/mediaUrl";
 import AdminListToolbar from "../components/AdminListToolbar";
 import AdminPaginationFooter from "../components/AdminPaginationFooter";
 import { useAdminPagedList } from "../hooks/useAdminPagedList";
-import {
-  createAdminBanner,
-  deleteAdminBanner,
-  getAdminBanner,
-  getAdminBannersPaged,
-  updateAdminBanner,
-  type AdminBannerListItem,
-  type AdminUpsertBanner,
-} from "../services/adminApi";
-
-const empty: AdminUpsertBanner = {
-  urlImg: "",
-  title: "",
-  link: "",
-  isMain: false,
-  displayOrder: 0,
-};
+import { deleteAdminBanner, getAdminBannersPaged, type AdminBannerListItem } from "../services/adminApi";
 
 export default function AdminBannersPage() {
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [isMain, setIsMain] = useState<string>("");
   const load = useCallback(
     async (args: { page: number; pageSize: number; search: string }) => {
       return getAdminBannersPaged({
         page: args.page,
         pageSize: args.pageSize,
         search: args.search || undefined,
+        isMain: isMain === "" ? undefined : isMain === "true",
       });
     },
-    [],
+    [isMain],
   );
 
   const {
@@ -46,60 +35,6 @@ export default function AdminBannersPage() {
     reload,
   } = useAdminPagedList<AdminBannerListItem>(load);
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [form, setForm] = useState<AdminUpsertBanner>(empty);
-  const [saving, setSaving] = useState(false);
-
-  const openCreate = () => {
-    setEditingId(null);
-    setForm(empty);
-    setModalOpen(true);
-  };
-
-  const openEdit = async (id: string) => {
-    try {
-      const b = await getAdminBanner(id);
-      setEditingId(id);
-      setForm({
-        urlImg: b.urlImg,
-        title: b.title ?? "",
-        link: b.link ?? "",
-        isMain: b.isMain,
-        displayOrder: b.displayOrder,
-      });
-      setModalOpen(true);
-    } catch {
-      toast.error("Không tải được banner.");
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
-    try {
-      const body: AdminUpsertBanner = {
-        urlImg: form.urlImg.trim(),
-        title: form.title?.trim() || null,
-        link: form.link?.trim() || null,
-        isMain: form.isMain,
-        displayOrder: Number(form.displayOrder) || 0,
-      };
-      if (editingId) {
-        await updateAdminBanner(editingId, body);
-        toast.success("Đã cập nhật.");
-      } else {
-        await createAdminBanner(body);
-        toast.success("Đã tạo banner.");
-      }
-      setModalOpen(false);
-      void reload();
-    } catch {
-      toast.error("Lưu thất bại.");
-    } finally {
-      setSaving(false);
-    }
-  };
 
   const handleDelete = async (id: string) => {
     if (!window.confirm("Xóa banner này?")) return;
@@ -118,11 +53,17 @@ export default function AdminBannersPage() {
         <h1 className="text-xl font-semibold">Banner trang chủ</h1>
         <button
           type="button"
-          onClick={openCreate}
+          onClick={() => setAdvancedOpen((x) => !x)}
+          className="rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-200 hover:bg-slate-800"
+        >
+          Bộ lọc nâng cao
+        </button>
+        <Link
+          to="/banners/new"
           className="rounded-lg bg-emerald-700 px-4 py-2 text-sm text-white hover:bg-emerald-600"
         >
           + Thêm banner
-        </button>
+        </Link>
       </div>
 
       <AdminListToolbar
@@ -133,6 +74,15 @@ export default function AdminBannersPage() {
         onPageSizeChange={setPageSize}
         disabled={loading}
       />
+      {advancedOpen && (
+        <div className="rounded-lg border border-slate-800 p-3">
+          <select value={isMain} onChange={(e) => setIsMain(e.target.value)} className="rounded border border-slate-700 bg-slate-900 px-3 py-2">
+            <option value="">Tất cả loại banner</option>
+            <option value="true">Banner chính</option>
+            <option value="false">Banner phụ</option>
+          </select>
+        </div>
+      )}
 
       <div className="overflow-x-auto rounded-lg border border-slate-800">
         <table className="min-w-full divide-y divide-slate-800 text-sm">
@@ -158,7 +108,7 @@ export default function AdminBannersPage() {
                 <tr key={row.homeBannerId}>
                   <td className="px-3 py-2">
                     <img
-                      src={row.urlImg}
+                      src={resolveMediaUrl(row.urlImg)}
                       alt=""
                       className="h-12 w-20 rounded object-cover"
                     />
@@ -167,13 +117,9 @@ export default function AdminBannersPage() {
                   <td className="px-3 py-2 text-center">{row.isMain ? "✓" : ""}</td>
                   <td className="px-3 py-2 text-right tabular-nums">{row.displayOrder}</td>
                   <td className="px-3 py-2 text-right">
-                    <button
-                      type="button"
-                      onClick={() => void openEdit(row.homeBannerId)}
-                      className="mr-2 text-sky-400 hover:underline"
-                    >
+                    <Link to={`/banners/${row.homeBannerId}/edit`} className="mr-2 text-sky-400 hover:underline">
                       Sửa
-                    </button>
+                    </Link>
                     <button
                       type="button"
                       onClick={() => void handleDelete(row.homeBannerId)}
@@ -205,82 +151,6 @@ export default function AdminBannersPage() {
         />
       )}
 
-      {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <form
-            onSubmit={(e) => void handleSubmit(e)}
-            className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-xl border border-slate-700 bg-slate-950 p-6"
-          >
-            <h2 className="mb-4 text-lg font-semibold">
-              {editingId ? "Sửa banner" : "Thêm banner"}
-            </h2>
-            <div className="space-y-3 text-sm">
-              <label className="block">
-                <span className="text-slate-400">URL ảnh *</span>
-                <input
-                  required
-                  type="url"
-                  value={form.urlImg}
-                  onChange={(e) => setForm((f) => ({ ...f, urlImg: e.target.value }))}
-                  className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-3 py-2"
-                />
-              </label>
-              <label className="block">
-                <span className="text-slate-400">Tiêu đề</span>
-                <input
-                  value={form.title ?? ""}
-                  onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-                  className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-3 py-2"
-                />
-              </label>
-              <label className="block">
-                <span className="text-slate-400">Link</span>
-                <input
-                  type="url"
-                  value={form.link ?? ""}
-                  onChange={(e) => setForm((f) => ({ ...f, link: e.target.value }))}
-                  className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-3 py-2"
-                />
-              </label>
-              <label className="block">
-                <span className="text-slate-400">Thứ tự</span>
-                <input
-                  type="number"
-                  value={form.displayOrder}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, displayOrder: Number(e.target.value) }))
-                  }
-                  className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-3 py-2"
-                />
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={form.isMain}
-                  onChange={(e) => setForm((f) => ({ ...f, isMain: e.target.checked }))}
-                />
-                Banner chính
-              </label>
-            </div>
-            <div className="mt-4 flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setModalOpen(false)}
-                className="rounded border border-slate-600 px-4 py-2"
-              >
-                Hủy
-              </button>
-              <button
-                type="submit"
-                disabled={saving}
-                className="rounded bg-[var(--site-primary,#dc2626)] px-4 py-2 text-white disabled:opacity-50"
-              >
-                {saving ? "…" : "Lưu"}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
     </div>
   );
 }

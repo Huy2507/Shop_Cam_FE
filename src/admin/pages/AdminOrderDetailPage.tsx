@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { getAdminOrder, type AdminOrderDetail } from "../services/adminApi";
+import {
+  getAdminOrder,
+  getAdminOrderStatuses,
+  updateAdminOrderStatus,
+  type AdminOrderDetail,
+  type AdminOrderStatus,
+} from "../services/adminApi";
 
 export default function AdminOrderDetailPage() {
   const { orderId } = useParams<{ orderId: string }>();
   const [data, setData] = useState<AdminOrderDetail | null>(null);
+  const [statuses, setStatuses] = useState<AdminOrderStatus[]>([]);
   const [loading, setLoading] = useState(true);
+  const [updatingStatus, setUpdatingStatus] = useState(false);
 
   useEffect(() => {
     if (!orderId) return;
@@ -15,7 +23,9 @@ export default function AdminOrderDetailPage() {
       setLoading(true);
       try {
         const d = await getAdminOrder(orderId);
+        const ss = await getAdminOrderStatuses();
         if (!cancelled) setData(d);
+        if (!cancelled) setStatuses(ss);
       } catch {
         toast.error("Không tải được đơn hàng.");
         if (!cancelled) setData(null);
@@ -53,6 +63,44 @@ export default function AdminOrderDetailPage() {
         <p className="text-sm text-slate-400">
           {new Date(data.createdAt).toLocaleString("vi-VN")}
         </p>
+        <div className="mt-3 flex items-center gap-2">
+          <span className="text-sm text-slate-400">Trạng thái:</span>
+          <select
+            value={data.orderStatusId}
+            disabled={updatingStatus}
+            onChange={async (e) => {
+              if (!orderId) return;
+              setUpdatingStatus(true);
+              try {
+                await updateAdminOrderStatus(orderId, e.target.value);
+                const selected = statuses.find((x) => x.orderStatusId === e.target.value);
+                setData((prev) =>
+                  prev
+                    ? {
+                        ...prev,
+                        orderStatusId: e.target.value,
+                        orderStatusCode: selected?.code ?? prev.orderStatusCode,
+                        orderStatusName: selected?.name ?? prev.orderStatusName,
+                        orderStatusColorHex: selected?.colorHex ?? prev.orderStatusColorHex,
+                      }
+                    : prev,
+                );
+                toast.success("Đã cập nhật trạng thái đơn.");
+              } catch {
+                toast.error("Cập nhật trạng thái thất bại.");
+              } finally {
+                setUpdatingStatus(false);
+              }
+            }}
+            className="rounded border border-slate-700 bg-slate-900 px-3 py-2 text-sm"
+          >
+            {statuses.map((s) => (
+              <option key={s.orderStatusId} value={s.orderStatusId}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <section className="rounded-lg border border-slate-800 bg-slate-900/50 p-4 text-sm">
