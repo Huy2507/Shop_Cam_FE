@@ -1,4 +1,5 @@
 import type { Product } from "../../types/home";
+import { useTranslation } from "react-i18next";
 import ProductCard from "./ProductCard";
 
 interface ProductGridProps {
@@ -10,14 +11,16 @@ interface ProductGridProps {
 
 const ProductGrid = ({
   products,
-  title = "BÁN CHẠY NHẤT",
+  title,
   activeFilter = "best",
   onFilterChange,
 }: ProductGridProps) => {
+  const { t } = useTranslation();
+  const resolvedTitle = title ?? t("common.storefront.bestSellerUpper");
   const filters = [
-    { id: "best", label: "BÁN CHẠY NHẤT" },
-    { id: "hot", label: "HOT SALE" },
-    { id: "combo", label: "COMBO SIÊU RẺ" },
+    { id: "best", label: t("common.storefront.bestSellerUpper") },
+    { id: "hot", label: t("common.storefront.hotSaleUpper") },
+    { id: "combo", label: t("common.storefront.comboCheapUpper") },
   ];
 
   return (
@@ -41,7 +44,7 @@ const ProductGrid = ({
         </div>
       )}
 
-      <h2 className="mb-4 text-lg font-bold uppercase text-slate-800">{title}</h2>
+      <h2 className="mb-4 text-lg font-bold uppercase text-slate-800">{resolvedTitle}</h2>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
         {products.map((product) => (
