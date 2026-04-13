@@ -34,22 +34,19 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-white p-4 transition-colors duration-200 dark:bg-slate-900">
-      <div className="w-full max-w-md space-y-8">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4 transition-colors duration-200 dark:bg-slate-900">
+      <div className="w-full max-w-md space-y-5">
         <div className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-violet-500 to-pink-500">
-            <Lock className="h-6 w-6 text-white" />
-          </div>
-          <h2 className="mb-2 text-3xl font-bold text-gray-900 dark:text-slate-100">
+          <h2 className="mb-1 text-2xl font-bold text-gray-900 dark:text-slate-100">
             {t("login.title")}
           </h2>
-          <p className="text-gray-600 dark:text-slate-400">
+          <p className="text-sm text-gray-600 dark:text-slate-400">
             {t("login.welcome")}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-xl transition-colors duration-200 dark:border-slate-700 dark:bg-slate-800">
-          <form onSubmit={handleLogin} className="space-y-6">
+        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-colors duration-200 dark:border-slate-700 dark:bg-slate-800">
+          <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-slate-200">
                 {t("login.usernameOrEmail.label")}
@@ -60,7 +57,7 @@ const Login: React.FC = () => {
                   type="text"
                   value={usernameOrEmail}
                   onChange={(e) => setUsernameOrEmail(e.target.value)}
-                  className="w-full rounded-lg border border-gray-200 bg-gray-50 py-3 pr-4 pl-10 text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:ring-2 focus:ring-violet-500 focus:outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder-slate-400"
+                  className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pr-4 pl-10 text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder-slate-400"
                   placeholder={t("login.usernameOrEmail.placeholder")}
                   autoComplete="username"
                   required
@@ -78,7 +75,7 @@ const Login: React.FC = () => {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-lg border border-gray-200 bg-gray-50 py-3 pr-12 pl-10 text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:ring-2 focus:ring-violet-500 focus:outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder-slate-400"
+                  className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pr-12 pl-10 text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder-slate-400"
                   placeholder={t("login.password.placeholder")}
                   autoComplete="current-password"
                   required
@@ -101,7 +98,7 @@ const Login: React.FC = () => {
               <label className="flex items-center">
                 <input
                   type="checkbox"
-                  className="h-4 w-4 rounded border-gray-200 bg-gray-50 text-violet-500 focus:ring-2 focus:ring-violet-500 dark:border-slate-600 dark:bg-slate-700"
+                  className="h-4 w-4 rounded border-gray-200 bg-gray-50 text-indigo-600 focus:ring-2 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-700"
                 />
                 <span className="ml-2 text-sm text-gray-600 dark:text-slate-300">
                   {t("login.rememberMe")}
@@ -109,7 +106,7 @@ const Login: React.FC = () => {
               </label>
               <button
                 type="button"
-                className="mt-4 cursor-pointer text-sm text-violet-500 transition-colors hover:text-violet-600 dark:text-violet-400 dark:hover:text-violet-300"
+                className="mt-4 cursor-pointer text-sm text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
                 onClick={() => navigate("/forgot-password")}
                 disabled={isLoading}
               >
@@ -125,7 +122,7 @@ const Login: React.FC = () => {
 
             <button
               type="submit"
-              className="w-full transform cursor-pointer rounded-lg bg-gradient-to-r from-violet-500 to-pink-500 px-4 py-3 font-semibold text-white transition-all hover:scale-[1.02] hover:from-violet-600 hover:to-pink-600 focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-white focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 dark:focus:ring-offset-slate-800"
+              className="w-full cursor-pointer rounded-lg bg-indigo-600 px-4 py-2.5 font-semibold text-white transition-colors hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-70 dark:focus:ring-offset-slate-800"
               disabled={isLoading}
             >
               {isLoading ? t("login.loading") : t("login.loginButton")}
