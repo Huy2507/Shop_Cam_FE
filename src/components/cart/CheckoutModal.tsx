@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../contexts/CartContext";
 import { createOrder } from "../../services/orderApi";
@@ -17,6 +18,7 @@ interface CheckoutModalProps {
  * - Nếu thành công: clear giỏ và hiển thị mã đơn
  */
 export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { items, totalAmount, clearCart } = useCart();
 
@@ -69,7 +71,7 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
         },
       });
     } catch {
-      setError("Không đặt hàng được. Vui lòng thử lại sau.");
+      setError(t("common.storefront.errors.createOrder"));
     } finally {
       setIsSubmitting(false);
     }
@@ -89,13 +91,13 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
       >
         <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
           <h2 id="checkout-title" className="text-lg font-semibold text-slate-800">
-            Đặt hàng
+            {t("common.storefront.order")}
           </h2>
           <button
             type="button"
             onClick={handleClose}
             className="rounded p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
-            aria-label="Đóng"
+            aria-label={t("common.storefront.close")}
           >
             <X className="h-5 w-5" />
           </button>
@@ -110,16 +112,16 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
 
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Họ và tên *</label>
+              <label className="mb-1 block text-sm font-medium text-slate-700">{t("common.storefront.fullName")} *</label>
               <input
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500"
-                placeholder="Nguyễn Văn A"
+                placeholder={t("common.storefront.fullNameExample")}
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Số điện thoại *</label>
+              <label className="mb-1 block text-sm font-medium text-slate-700">{t("common.storefront.phone")} *</label>
               <input
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -130,7 +132,7 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">Email</label>
+              <label className="mb-1 block text-sm font-medium text-slate-700">{t("common.storefront.email")}</label>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -140,27 +142,27 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">Địa chỉ *</label>
+            <label className="mb-1 block text-sm font-medium text-slate-700">{t("common.storefront.address")} *</label>
             <input
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500"
-              placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành"
+              placeholder={t("common.storefront.addressPlaceholder")}
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">Ghi chú</label>
+            <label className="mb-1 block text-sm font-medium text-slate-700">{t("common.storefront.note")}</label>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
               className="min-h-[80px] w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500"
-              placeholder="Ví dụ: giao giờ hành chính..."
+              placeholder={t("common.storefront.notePlaceholder")}
             />
           </div>
 
           <div className="rounded-lg bg-slate-50 p-3 text-sm text-slate-700">
-            Tổng thanh toán:{" "}
+            {t("common.storefront.totalPayment")}:{" "}
             <strong className="text-red-600">{formatVnd(totalAmount)}</strong>
           </div>
         </div>
@@ -172,7 +174,7 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
             className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
             disabled={isSubmitting}
           >
-            Huỷ
+            {t("common.storefront.cancel")}
           </button>
           <button
             type="button"
@@ -180,7 +182,7 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
             disabled={!canSubmit}
             className="rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-slate-300"
           >
-            {isSubmitting ? "Đang gửi..." : "Xác nhận đặt hàng"}
+            {isSubmitting ? t("common.storefront.submitting") : t("common.storefront.confirmOrder")}
           </button>
         </div>
       </div>
