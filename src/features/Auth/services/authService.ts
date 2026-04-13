@@ -1,4 +1,5 @@
 import api from "@services/axiosConfig";
+import { ACCESS_FROM_STORAGE_KEY } from "@constants/authAccessFrom";
 import { User } from "../../../hooks/useAuth";
 import {
   ForgotPasswordRequest,
@@ -7,22 +8,10 @@ import {
   VerifyResetCodeRequest,
 } from "../types/auth";
 
-export const verifyLoginOTP = async (otp: string) => {
-  try {
-    const response = await api.post("/api/Auth/verify-login-otp", {
-      otp,
-      accessFrom: "dashboard",
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error during OTP verification:", error);
-    throw error;
-  }
-};
-
 export const login = async (credentials: LoginRequest) => {
   try {
     const response = await api.post("/api/Auth/login/dashboard", credentials);
+    sessionStorage.setItem(ACCESS_FROM_STORAGE_KEY, "dashboard");
     return response.data;
   } catch (error) {
     console.error("Error during login:", error);
@@ -32,8 +21,10 @@ export const login = async (credentials: LoginRequest) => {
 
 export const refreshToken = async () => {
   try {
+    const accessFrom =
+      sessionStorage.getItem(ACCESS_FROM_STORAGE_KEY) ?? "dashboard";
     const response = await api.post(
-      `/api/Auth/refresh-token?accessFrom=dashboard`,
+      `/api/Auth/refresh-token?accessFrom=${encodeURIComponent(accessFrom)}`,
     );
     return response.data;
   } catch (error) {
@@ -42,6 +33,7 @@ export const refreshToken = async () => {
   }
 };
 
+/** Chỉ dùng cho luồng quên mật khẩu (gửi lại mã OTP). */
 export const resendOTP = async (
   username: string,
   isForgotPassword: boolean,
@@ -126,6 +118,7 @@ export const getCurrentUser = async (): Promise<User> => {
 export const logout = async () => {
   try {
     await api.post("/api/Auth/logout");
+    sessionStorage.removeItem(ACCESS_FROM_STORAGE_KEY);
   } catch (error) {
     console.error("Error during logout:", error);
     throw error;

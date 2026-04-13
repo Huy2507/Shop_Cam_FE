@@ -23,9 +23,7 @@ const Login: React.FC = () => {
       setError(null);
       await login({ username: usernameOrEmail, password });
       toast.success(t("login.loginSuccess"));
-      navigate("/verify-otp", {
-        state: { email: usernameOrEmail, fromLogin: true },
-      });
+      navigate("/");
     } catch (err) {
       const errorMessage = resolveErrorMessage(err);
       setError(errorMessage);

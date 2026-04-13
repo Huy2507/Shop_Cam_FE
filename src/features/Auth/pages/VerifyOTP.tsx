@@ -4,11 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  resendOTP,
-  verifyLoginOTP,
-  verifyResetCode,
-} from "../services/authService";
+import { resendOTP, verifyResetCode } from "../services/authService";
 
 const VerifyOTP: React.FC = () => {
   const { t } = useTranslation("auth");
@@ -21,7 +17,7 @@ const VerifyOTP: React.FC = () => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const countdownRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
-  const { email, fromLogin, fromForgot } = location.state || {};
+  const { email, fromForgot } = location.state || {};
 
   useEffect(() => {
     return () => {
@@ -47,13 +43,13 @@ const VerifyOTP: React.FC = () => {
   }, [countdown]);
 
   useEffect(() => {
-    if (!email || (!fromLogin && !fromForgot)) {
+    if (!email || !fromForgot) {
       toast.error(t("verifyOTP.invalidAccess"));
       navigate("/login");
     } else {
       setCountdown(60);
     }
-  }, [email, fromLogin, fromForgot, navigate, t]);
+  }, [email, fromForgot, navigate, t]);
 
   const handleCodeChange = (index: number, value: string) => {
     if (value.length <= 1 && /^\d*$/.test(value)) {
@@ -109,11 +105,7 @@ const VerifyOTP: React.FC = () => {
 
     try {
       setIsLoading(true);
-      if (fromLogin) {
-        await verifyLoginOTP(fullCode);
-        toast.success(t("verifyOTP.verifySuccess"));
-        navigate("/");
-      } else if (fromForgot) {
+      if (fromForgot) {
         await verifyResetCode(fullCode, email);
         toast.success(t("verifyOTP.verifySuccess"));
         navigate("/set-password", {
@@ -132,7 +124,7 @@ const VerifyOTP: React.FC = () => {
   const handleResendCode = async () => {
     try {
       setIsLoading(true);
-      await resendOTP(email, !!fromForgot);
+      await resendOTP(email, true);
       toast.success(t("verifyOTP.resendSuccess"));
       setCode(["", "", "", "", "", ""]);
       inputRefs.current[0]?.focus();
@@ -229,16 +221,14 @@ const VerifyOTP: React.FC = () => {
           <div className="mt-6 border-t border-gray-200 pt-6 dark:border-slate-700">
             <button
               onClick={() =>
-                navigate(fromForgot ? "/forgot-password" : "/login", {
+                navigate("/forgot-password", {
                   state: { email },
                 })
               }
               className="inline-flex cursor-pointer items-center text-sm font-medium text-gray-500 transition-colors hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-300"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
-              {fromForgot
-                ? t("verifyOTP.backToForgot")
-                : t("verifyOTP.backToLogin")}
+              {t("verifyOTP.backToForgot")}
             </button>
           </div>
         </div>
