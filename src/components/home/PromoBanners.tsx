@@ -13,7 +13,7 @@ const PromoBanners = ({ banners }: PromoBannersProps) => {
         <a
           key={banner.id}
           href={banner.link || "#"}
-          className="block overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition hover:shadow-md"
+          className="block overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition hover:shadow-md dark:border-slate-700 dark:bg-slate-900"
         >
           <div className="relative aspect-[280/120] overflow-hidden">
             <img
