@@ -2,6 +2,7 @@ import { useCart } from "../../contexts/CartContext";
 import type { Product } from "../../types/home";
 import { formatVnd } from "@utils/formatVnd";
 import { getUnitPriceAfterDiscount, hasActiveDiscount } from "@utils/productPricing";
+import { resolveMediaUrl } from "@utils/mediaUrl";
 import { Link } from "react-router-dom";
 
 interface ProductCardProps {
@@ -20,13 +21,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const newPrice = getUnitPriceAfterDiscount(product.price, product.discount);
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
+    <div className="group relative flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md dark:border-slate-700 dark:bg-slate-900">
       <Link
         to={`/san-pham/${product.id}`}
-        className="relative block aspect-square overflow-hidden bg-slate-100"
+        className="relative block aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"
       >
         <img
-          src={product.imageUrl}
+          src={resolveMediaUrl(product.imageUrl)}
           alt={product.name}
           className="h-full w-full object-cover transition group-hover:scale-105"
         />
@@ -56,7 +57,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
       <div className="flex flex-1 flex-col p-3">
         <Link to={`/san-pham/${product.id}`}>
-          <h3 className="mb-2 line-clamp-2 text-sm font-medium text-slate-800 transition hover:text-red-600">
+          <h3 className="mb-2 line-clamp-2 text-sm font-medium text-slate-800 transition hover:text-red-600 dark:text-slate-100">
             {product.name}
           </h3>
         </Link>
@@ -64,9 +65,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div className="mt-auto space-y-1">
           {hasDiscount ? (
             <>
-              <p className="text-xs text-slate-500">Giá khuyến mãi:</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Giá khuyến mãi:</p>
               <p className="text-lg font-bold text-red-600">{formatVnd(newPrice)}</p>
-              <p className="text-sm text-slate-400 line-through">{formatVnd(product.price)}</p>
+              <p className="text-sm text-slate-400 line-through dark:text-slate-500">{formatVnd(product.price)}</p>
             </>
           ) : (
             <p className="text-lg font-bold text-red-600">{formatVnd(product.price)}</p>
@@ -80,7 +81,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
               e.preventDefault();
               openAddToCartModal(product);
             }}
-            className="mt-3 w-full rounded-lg border border-red-600 bg-white py-2 text-sm font-medium text-red-600 transition hover:bg-red-600 hover:text-white"
+            className="mt-3 w-full rounded-lg border border-red-600 bg-white py-2 text-sm font-medium text-red-600 transition hover:bg-red-600 hover:text-white dark:bg-slate-900"
           >
             Thêm vào giỏ
           </button>

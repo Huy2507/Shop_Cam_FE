@@ -2,15 +2,18 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Banner as BannerType } from "../../types/home";
+import { resolveMediaUrl } from "@utils/mediaUrl";
 
 interface BannerProps {
   banners?: BannerType[];
   className?: string;
+  /** Khi true: lấp đầy ô grid cạnh sidebar, cùng chiều cao hàng (bỏ aspect ratio cố định). */
+  fillHeight?: boolean;
 }
 
 const AUTOPLAY_MS = 5000;
 
-const Banner = ({ banners = [], className = "" }: BannerProps) => {
+const Banner = ({ banners = [], className = "", fillHeight = false }: BannerProps) => {
   const { t } = useTranslation();
   const safeBanners = useMemo(
     () => (banners.length > 0 ? banners : [{ id: "fallback", urlimg: "https://picsum.photos/1200/400?random=banner" }]),
@@ -34,13 +37,19 @@ const Banner = ({ banners = [], className = "" }: BannerProps) => {
 
   const content = (
     <div
-      className={`relative overflow-hidden rounded-xl bg-slate-200 dark:bg-slate-800 ${className}`}
-      style={{ aspectRatio: "1200/420", minHeight: 300 }}
+      className={`relative overflow-hidden rounded-xl bg-slate-200 dark:bg-slate-800 ${className} ${
+        fillHeight ? "h-full min-h-[300px] min-w-0" : ""
+      }`}
+      style={
+        fillHeight
+          ? undefined
+          : { aspectRatio: "1200/420", minHeight: 300 }
+      }
     >
       <img
-        src={activeBanner.urlimg}
+        src={resolveMediaUrl(activeBanner.urlimg)}
         alt={activeBanner.title || "Banner"}
-        className="h-full w-full object-cover"
+        className={`w-full object-cover ${fillHeight ? "absolute inset-0 h-full" : "h-full"}`}
       />
       {activeBanner.title && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/30">
@@ -51,14 +60,14 @@ const Banner = ({ banners = [], className = "" }: BannerProps) => {
       )}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
         <span className="rounded-lg bg-red-600 px-6 py-2.5 text-sm font-medium text-white shadow-lg hover:bg-red-700">
-          {t("common.storefront.buyNow")}
+          {t("storefront.buyNow")}
         </span>
       </div>
       {safeBanners.length > 1 && (
         <>
           <button
             type="button"
-            aria-label={t("common.storefront.previousSlide")}
+            aria-label={t("storefront.previousSlide")}
             className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/30 p-1.5 text-white hover:bg-black/50"
             onClick={() =>
               setActiveIndex((prev) => (prev - 1 + safeBanners.length) % safeBanners.length)
@@ -68,7 +77,7 @@ const Banner = ({ banners = [], className = "" }: BannerProps) => {
           </button>
           <button
             type="button"
-            aria-label={t("common.storefront.nextSlide")}
+            aria-label={t("storefront.nextSlide")}
             className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/30 p-1.5 text-white hover:bg-black/50"
             onClick={() => setActiveIndex((prev) => (prev + 1) % safeBanners.length)}
           >
@@ -81,7 +90,7 @@ const Banner = ({ banners = [], className = "" }: BannerProps) => {
                 type="button"
                 onClick={() => setActiveIndex(idx)}
                 className={`h-2 w-2 rounded-full ${idx === activeIndex ? "bg-white" : "bg-white/50"}`}
-                aria-label={`${t("common.storefront.slide")} ${idx + 1}`}
+                aria-label={`${t("storefront.slide")} ${idx + 1}`}
               />
             ))}
           </div>
@@ -92,7 +101,10 @@ const Banner = ({ banners = [], className = "" }: BannerProps) => {
 
   if (activeBanner.link) {
     return (
-      <a href={activeBanner.link} className="block">
+      <a
+        href={activeBanner.link}
+        className={fillHeight ? "block h-full min-h-[300px] min-w-0" : "block"}
+      >
         {content}
       </a>
     );

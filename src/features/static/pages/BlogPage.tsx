@@ -51,7 +51,7 @@ const BlogPage = () => {
         setNews(data.items);
         setTotalPages(Math.max(1, data.totalPages));
       } catch {
-        setError(t("common.storefront.errors.loadNews"));
+        setError(t("storefront.errors.loadNews"));
       } finally {
         setIsLoading(false);
       }
@@ -134,16 +134,16 @@ const BlogPage = () => {
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
         <header className="mb-6">
           <h1
-            className={`text-2xl font-bold text-slate-800 ${
+            className={`text-2xl font-bold text-slate-800 dark:text-slate-100 ${
               visual === "editorial" ? "font-serif tracking-tight" : ""
             }`}
           >
             {np.pageTitle}
           </h1>
           {np.pageSubtitle ? (
-            <p className="mt-1 text-sm text-slate-600">{np.pageSubtitle}</p>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{np.pageSubtitle}</p>
           ) : (
-            <p className="mt-1 text-sm text-slate-600">{t("common.storefront.blogFromApi")}</p>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t("storefront.blogFromApi")}</p>
           )}
           {np.personalized ? (
             <p className="mt-2 text-xs text-amber-700">
@@ -153,7 +153,7 @@ const BlogPage = () => {
         </header>
 
         <div className="mb-6">
-          <p className="mb-2 text-sm font-medium text-slate-600">Kiểu giao diện (skin)</p>
+          <p className="mb-2 text-sm font-medium text-slate-600 dark:text-slate-300">Kiểu giao diện (skin)</p>
           <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {NEWS_VISUAL_TEMPLATE_IDS.map((id) => (
               <button
@@ -163,24 +163,24 @@ const BlogPage = () => {
                 onClick={() => void pickVisualTemplate(id)}
                 className={`flex flex-col rounded-xl border-2 p-3 text-left text-sm transition ${
                   visual === id
-                    ? "border-[var(--site-primary,#dc2626)] bg-white shadow-md ring-1 ring-[var(--site-primary,#dc2626)]/20"
-                    : "border-slate-200 bg-white/90 hover:border-slate-300"
+                    ? "border-[var(--site-primary,#dc2626)] bg-white shadow-md ring-1 ring-[var(--site-primary,#dc2626)]/20 dark:bg-slate-800"
+                    : "border-slate-200 bg-white/90 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-slate-600"
                 } disabled:opacity-50`}
               >
-                <span className="font-semibold text-slate-800">{NEWS_VISUAL_LABELS[id].title}</span>
-                <span className="mt-1 text-xs text-slate-500">{NEWS_VISUAL_LABELS[id].hint}</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-100">{NEWS_VISUAL_LABELS[id].title}</span>
+                <span className="mt-1 text-xs text-slate-500 dark:text-slate-400">{NEWS_VISUAL_LABELS[id].hint}</span>
               </button>
             ))}
           </div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             {isAuthenticated
               ? "Skin đã chọn được lưu theo tài khoản và áp trên mọi thiết bị khi đăng nhập."
               : "Chưa đăng nhập: đổi skin chỉ xem thử trên trình duyệt này — đăng nhập rồi chọn lại để lưu."}
           </p>
         </div>
 
-        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-3 text-sm text-slate-700">
-          <span className="font-medium text-slate-600">Bố cục:</span>
+        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
+          <span className="font-medium text-slate-600 dark:text-slate-300">Bố cục:</span>
           {(["magazine", "grid", "list"] as const).map((l) => (
             <button
               key={l}
@@ -190,7 +190,7 @@ const BlogPage = () => {
               className={`rounded-md px-2 py-1 ${
                 np.layout === l
                   ? "bg-slate-800 text-white"
-                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
               } disabled:opacity-50`}
             >
               {l === "magazine" ? "Tạp chí" : l === "grid" ? "Lưới" : "Danh sách"}
@@ -198,17 +198,17 @@ const BlogPage = () => {
           ))}
           {np.layout !== "list" ? (
             <>
-              <span className="ml-2 hidden sm:inline text-slate-400">|</span>
+              <span className="ml-2 hidden sm:inline text-slate-400 dark:text-slate-500">|</span>
               <button
                 type="button"
                 disabled={savingPref || np.layout !== "magazine"}
                 onClick={() => void toggleFeatured()}
-                className="rounded-md bg-slate-100 px-2 py-1 hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-md bg-slate-100 px-2 py-1 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
                 title="Chỉ áp dụng khi layout Tạp chí"
               >
                 {np.showFeatured ? "Ẩn tin nổi bật" : "Bật tin nổi bật"}
               </button>
-              <span className="text-slate-500">Cột:</span>
+              <span className="text-slate-500 dark:text-slate-400">Cột:</span>
               {([2, 3, 4] as const).map((c) => (
                 <button
                   key={c}
@@ -218,7 +218,7 @@ const BlogPage = () => {
                   className={`rounded-md px-2 py-1 ${
                     np.gridColumns === c
                       ? "bg-slate-800 text-white"
-                      : "bg-slate-100 hover:bg-slate-200"
+                      : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
                   } disabled:opacity-40`}
                 >
                   {c}
@@ -227,7 +227,7 @@ const BlogPage = () => {
             </>
           ) : null}
           {!isAuthenticated ? (
-            <span className="text-xs text-slate-500">(Đăng nhập để lưu lựa chọn)</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">(Đăng nhập để lưu lựa chọn)</span>
           ) : null}
         </div>
 
@@ -235,7 +235,7 @@ const BlogPage = () => {
         {isLoading ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 animate-pulse">
             {Array.from({ length: 4 }).map((_, idx) => (
-              <div key={idx} className="flex flex-col rounded-xl bg-white p-3 shadow-sm">
+              <div key={idx} className="flex flex-col rounded-xl bg-white p-3 shadow-sm dark:bg-slate-900">
                 <div className="mb-3 h-24 rounded-lg bg-slate-200" />
                 <div className="mb-2 h-4 w-5/6 rounded bg-slate-200" />
                 <div className="h-4 w-2/3 rounded bg-slate-200" />
@@ -258,18 +258,18 @@ const BlogPage = () => {
                   type="button"
                   disabled={page <= 1 || isLoading}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm disabled:opacity-40"
+                  className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm disabled:opacity-40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                 >
                   Trước
                 </button>
-                <span className="text-sm text-slate-600">
+                <span className="text-sm text-slate-600 dark:text-slate-300">
                   Trang {page} / {totalPages}
                 </span>
                 <button
                   type="button"
                   disabled={page >= totalPages || isLoading}
                   onClick={() => setPage((p) => p + 1)}
-                  className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm disabled:opacity-40"
+                  className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm disabled:opacity-40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                 >
                   Sau
                 </button>

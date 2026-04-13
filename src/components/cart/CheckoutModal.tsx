@@ -71,7 +71,7 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
         },
       });
     } catch {
-      setError(t("common.storefront.errors.createOrder"));
+      setError(t("storefront.errors.createOrder"));
     } finally {
       setIsSubmitting(false);
     }
@@ -91,13 +91,13 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
       >
         <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
           <h2 id="checkout-title" className="text-lg font-semibold text-slate-800">
-            {t("common.storefront.order")}
+            {t("storefront.order")}
           </h2>
           <button
             type="button"
             onClick={handleClose}
             className="rounded p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
-            aria-label={t("common.storefront.close")}
+            aria-label={t("storefront.close")}
           >
             <X className="h-5 w-5" />
           </button>
@@ -112,16 +112,16 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
 
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">{t("common.storefront.fullName")} *</label>
+              <label className="mb-1 block text-sm font-medium text-slate-700">{t("storefront.fullName")} *</label>
               <input
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500"
-                placeholder={t("common.storefront.fullNameExample")}
+                placeholder={t("storefront.fullNameExample")}
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">{t("common.storefront.phone")} *</label>
+              <label className="mb-1 block text-sm font-medium text-slate-700">{t("storefront.phone")} *</label>
               <input
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -132,7 +132,7 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
           </div>
 
           <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">{t("common.storefront.email")}</label>
+              <label className="mb-1 block text-sm font-medium text-slate-700">{t("storefront.email")}</label>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -142,27 +142,27 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">{t("common.storefront.address")} *</label>
+            <label className="mb-1 block text-sm font-medium text-slate-700">{t("storefront.address")} *</label>
             <input
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500"
-              placeholder={t("common.storefront.addressPlaceholder")}
+              placeholder={t("storefront.addressPlaceholder")}
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">{t("common.storefront.note")}</label>
+            <label className="mb-1 block text-sm font-medium text-slate-700">{t("storefront.note")}</label>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
               className="min-h-[80px] w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500"
-              placeholder={t("common.storefront.notePlaceholder")}
+              placeholder={t("storefront.notePlaceholder")}
             />
           </div>
 
           <div className="rounded-lg bg-slate-50 p-3 text-sm text-slate-700">
-            {t("common.storefront.totalPayment")}:{" "}
+            {t("storefront.totalPayment")}:{" "}
             <strong className="text-red-600">{formatVnd(totalAmount)}</strong>
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
             className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
             disabled={isSubmitting}
           >
-            {t("common.storefront.cancel")}
+            {t("storefront.cancel")}
           </button>
           <button
             type="button"
@@ -182,7 +182,7 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
             disabled={!canSubmit}
             className="rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-slate-300"
           >
-            {isSubmitting ? t("common.storefront.submitting") : t("common.storefront.confirmOrder")}
+            {isSubmitting ? t("storefront.submitting") : t("storefront.confirmOrder")}
           </button>
         </div>
       </div>
