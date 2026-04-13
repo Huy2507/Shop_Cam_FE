@@ -11,6 +11,18 @@ const INTEGRATIONS_GROUP = "Integrations";
 const NEWS_PAGE_GROUP = "NewsPage";
 const HOME_PAGE_GROUP = "HomePage";
 
+type FieldType = "text" | "url" | "color" | "textarea" | "select" | "radio" | "checkbox";
+type FieldOption = { value: string; label: string };
+type FieldDef = {
+  key: string;
+  label: string;
+  type: FieldType;
+  defaultValue: string;
+  hint?: string;
+  options?: FieldOption[];
+  rows?: number;
+};
+
 const UI_KEYS = [
   {
     key: "theme_primary_color",
@@ -35,7 +47,7 @@ const UI_KEYS = [
   { key: "hero_tagline", label: "Tagline / slogan (tuỳ chọn)", type: "text" as const, defaultValue: "" },
 ];
 
-const INTEGRATION_KEYS = [
+const INTEGRATION_KEYS: FieldDef[] = [
   {
     key: "zalo_oa_id",
     label: "Zalo OA ID (số Official Account)",
@@ -59,117 +71,171 @@ const INTEGRATION_KEYS = [
   },
 ];
 
-const NEWS_PAGE_KEYS = [
-  { key: "news_page_title", label: "Tiêu đề trang tin", type: "text" as const, defaultValue: "Tin tức" },
+const NEWS_PAGE_KEYS: FieldDef[] = [
+  { key: "news_page_title", label: "Tiêu đề trang tin", type: "text", defaultValue: "Tin tức" },
   {
     key: "news_page_subtitle",
     label: "Mô tả phụ (tuỳ chọn)",
-    type: "text" as const,
+    type: "text",
     defaultValue: "",
   },
   {
     key: "news_default_layout",
-    label: "Layout mặc định (magazine | grid | list)",
-    type: "text" as const,
+    label: "Layout mặc định",
+    type: "radio",
     defaultValue: "magazine",
+    options: [
+      { value: "magazine", label: "Tạp chí" },
+      { value: "grid", label: "Lưới" },
+      { value: "list", label: "Danh sách" },
+    ],
   },
-  { key: "news_page_size", label: "Số bài / trang (4–50)", type: "text" as const, defaultValue: "12" },
+  {
+    key: "news_page_size",
+    label: "Số bài / trang",
+    type: "select",
+    defaultValue: "12",
+    options: [
+      { value: "6", label: "6 bài" },
+      { value: "8", label: "8 bài" },
+      { value: "10", label: "10 bài" },
+      { value: "12", label: "12 bài" },
+      { value: "15", label: "15 bài" },
+      { value: "20", label: "20 bài" },
+      { value: "24", label: "24 bài" },
+      { value: "30", label: "30 bài" },
+      { value: "50", label: "50 bài" },
+    ],
+  },
   {
     key: "news_show_featured",
-    label: "Bật khối tin nổi bật (magazine)",
-    type: "text" as const,
+    label: "Hiển thị khối tin nổi bật (layout tạp chí)",
+    type: "checkbox",
     defaultValue: "true",
   },
   {
     key: "news_grid_columns",
-    label: "Số cột lưới (2–4)",
-    type: "text" as const,
+    label: "Số cột lưới",
+    type: "select",
     defaultValue: "4",
+    options: [
+      { value: "2", label: "2 cột" },
+      { value: "3", label: "3 cột" },
+      { value: "4", label: "4 cột" },
+    ],
   },
   {
     key: "news_visual_template",
-    label: "Skin giao diện (classic | editorial | minimal | bold | glass)",
-    type: "text" as const,
+    label: "Skin giao diện",
+    type: "radio",
     defaultValue: "classic",
+    options: [
+      { value: "classic", label: "Cổ điển (classic)" },
+      { value: "editorial", label: "Tạp chí (editorial)" },
+      { value: "minimal", label: "Tối giản (minimal)" },
+      { value: "bold", label: "Nổi bật (bold)" },
+      { value: "glass", label: "Kính mờ (glass)" },
+    ],
   },
 ];
 
-const HOME_PAGE_KEYS = [
+const HOME_PAGE_KEYS: FieldDef[] = [
   {
     key: "home_category_layout",
-    label: "Bố cục danh mục trang chủ (navbar | sidebar_no_promo)",
+    label: "Bố cục danh mục trang chủ",
     hint:
       "navbar: danh mục nằm trên thanh menu (dropdown). sidebar_no_promo: danh mục nằm cạnh banner và ẩn cột promo phải để banner rộng.",
-    type: "text" as const,
+    type: "radio",
     defaultValue: "navbar",
+    options: [
+      { value: "navbar", label: "Navbar dropdown" },
+      { value: "sidebar_no_promo", label: "Sidebar (ẩn promo phải)" },
+    ],
   },
   {
     key: "home_show_banner_block",
     label: "Hiện banner chính (carousel)",
-    type: "text" as const,
+    type: "checkbox",
     defaultValue: "true",
   },
   {
     key: "home_show_promo_sidebar",
     label: "Hiện cột banner khuyến mãi bên phải",
-    type: "text" as const,
+    type: "checkbox",
     defaultValue: "true",
   },
   {
     key: "home_show_mid_promo",
     label: "Hiện 3 ô promo giữa trang (ảnh + link tùy JSON bên dưới)",
-    type: "text" as const,
+    type: "checkbox",
     defaultValue: "true",
   },
   {
     key: "home_show_product_tabs",
     label: "Hiện khối sản phẩm (Bán chạy / Hot / Combo)",
-    type: "text" as const,
+    type: "checkbox",
     defaultValue: "true",
   },
   {
     key: "home_show_new_arrivals",
     label: "Hiện khối hàng mới",
-    type: "text" as const,
+    type: "checkbox",
     defaultValue: "true",
   },
   {
     key: "home_show_news",
     label: "Hiện khối tin tức",
-    type: "text" as const,
+    type: "checkbox",
     defaultValue: "true",
   },
   {
     key: "home_default_product_tab",
-    label: "Tab sản phẩm mặc định (best | hot | combo)",
-    type: "text" as const,
+    label: "Tab sản phẩm mặc định",
+    type: "select",
     defaultValue: "best",
+    options: [
+      { value: "best", label: "Bán chạy nhất" },
+      { value: "hot", label: "Hot sale" },
+      { value: "combo", label: "Combo siêu rẻ" },
+    ],
   },
   {
     key: "home_new_arrivals_title",
     label: "Tiêu đề khối hàng mới (để trống = dùng bản dịch FE)",
-    type: "text" as const,
+    type: "text",
     defaultValue: "",
   },
   {
     key: "home_news_take",
-    label: "Số bài tin trên trang chủ (1–30)",
-    type: "text" as const,
+    label: "Số bài tin trên trang chủ",
+    type: "select",
     defaultValue: "10",
+    options: [
+      { value: "4", label: "4 bài" },
+      { value: "6", label: "6 bài" },
+      { value: "8", label: "8 bài" },
+      { value: "10", label: "10 bài" },
+      { value: "12", label: "12 bài" },
+      { value: "15", label: "15 bài" },
+      { value: "20", label: "20 bài" },
+      { value: "30", label: "30 bài" },
+    ],
   },
   {
     key: "home_section_order",
     label:
       'Thứ tự section (JSON array): bannerPromo, midPromo, productTabs, newArrivals, news',
-    type: "textarea" as const,
+    type: "textarea",
     defaultValue: '["bannerPromo","midPromo","productTabs","newArrivals","news"]',
+    rows: 4,
   },
   {
     key: "home_mid_promo_json",
     label:
       'JSON mảng tối đa 6 ô: [{"title":"...","imageUrl":"https://...","link":"https://..."}] — [] = dùng ảnh mẫu + i18n',
-    type: "textarea" as const,
+    type: "textarea",
     defaultValue: "[]",
+    rows: 10,
   },
 ];
 
@@ -182,6 +248,18 @@ function parseJsonString(raw: string | undefined, fallback: string): string {
   } catch {
     return raw.replace(/^"|"$/g, "");
   }
+}
+
+function isTrue(v: string | undefined): boolean {
+  return String(v ?? "").trim().toLowerCase() === "true";
+}
+
+function normalizeByCatalog(def: FieldDef, raw: string): string {
+  if (def.type === "checkbox") return isTrue(raw) ? "true" : "false";
+  if (def.options?.length) {
+    return def.options.some((o) => o.value === raw) ? raw : def.defaultValue;
+  }
+  return raw;
 }
 
 type TabId = "ui" | "integrations" | "news" | "home";

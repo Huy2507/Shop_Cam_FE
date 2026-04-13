@@ -110,14 +110,14 @@ export default function PolicyPage() {
   );
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
       <Header />
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6">
         <BreadcrumbNav items={breadcrumbItems} />
 
         {!policy && (
-          <div className="rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-            <p className="text-slate-600">Không tìm thấy nội dung chính sách.</p>
+          <div className="rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900">
+            <p className="text-slate-600 dark:text-slate-300">Không tìm thấy nội dung chính sách.</p>
             <Link to="/" className="mt-4 inline-block text-sm font-medium text-red-600 hover:underline">
               Về trang chủ
             </Link>
@@ -125,13 +125,13 @@ export default function PolicyPage() {
         )}
 
         {policy && (
-          <article className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <h1 className="text-2xl font-bold text-slate-900">{policy.title}</h1>
-            <div className="mt-6 space-y-8 text-sm leading-relaxed text-slate-700 sm:text-base">
+          <article className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900 sm:p-8">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{policy.title}</h1>
+            <div className="mt-6 space-y-8 text-sm leading-relaxed text-slate-700 dark:text-slate-300 sm:text-base">
               {policy.sections.map((sec, i) => (
                 <section key={i}>
                   {sec.heading && (
-                    <h2 className="mb-3 text-lg font-semibold text-slate-800">{sec.heading}</h2>
+                    <h2 className="mb-3 text-lg font-semibold text-slate-800 dark:text-slate-100">{sec.heading}</h2>
                   )}
                   {sec.paragraphs.map((p, j) => (
                     <p key={j} className={j > 0 ? "mt-3" : ""}>
