@@ -46,5 +46,16 @@
   "OPERATION_FAILED": "Thao tác thất bại.",
   "FORBIDDEN": "Bạn không có quyền thực hiện hành động này.",
   "UNKNOWN_ERROR": "Đã xảy ra lỗi không xác định.",
-  "INVALID_DATA": "Dữ liệu không hợp lệ."
+  "INVALID_DATA": "Dữ liệu không hợp lệ.",
+  "ACCOUNT_LOCKED": "Tài khoản đã bị khóa.",
+  "PRODUCT_DELETE_CONFLICT_ORDERS": "Không xóa được: sản phẩm đã có trong đơn hàng.",
+  "CATEGORY_DELETE_HAS_PRODUCTS": "Không xóa được: vẫn còn sản phẩm thuộc danh mục này.",
+  "MISSING_QUERY_PARAMETER": "Thiếu tham số truy vấn bắt buộc.",
+  "EMPTY_SITE_SETTINGS_ITEMS": "Danh sách cấu hình không được rỗng.",
+  "SITE_SETTING_KEY_NOT_ALLOWED": "Không được phép ghi nhóm/khóa cấu hình này.",
+  "RESEND_OTP_NOT_SUPPORTED": "Chức năng gửi lại OTP không áp dụng cho luồng này.",
+  "OTP_RESEND_COOLDOWN": "Vui lòng chờ {{seconds}} giây trước khi gửi lại OTP.",
+  "ORDER_REQUIRES_ITEMS": "Đơn hàng phải có ít nhất một sản phẩm.",
+  "ORDER_PRODUCTS_NOT_FOUND": "Một hoặc nhiều sản phẩm không tồn tại.",
+  "MISSING_USERNAME_OR_EMAIL": "Vui lòng nhập tên đăng nhập hoặc email."
 }
