@@ -12,7 +12,8 @@ interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
 }
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  // Để trống + proxy Vite /api → tránh CORS khi dev (xem vite.config và .env.example).
+  baseURL: import.meta.env.VITE_API_URL ?? "",
   timeout: 600000,
   headers: {
     "Content-Type": "application/json",
