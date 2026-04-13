@@ -46,5 +46,16 @@
   "OPERATION_FAILED": "Operation failed.",
   "FORBIDDEN": "You are not allowed to perform this action.",
   "UNKNOWN_ERROR": "An unknown error occurred.",
-  "INVALID_DATA": "Invalid data."
+  "INVALID_DATA": "Invalid data.",
+  "ACCOUNT_LOCKED": "This account has been locked.",
+  "PRODUCT_DELETE_CONFLICT_ORDERS": "Cannot delete: this product is referenced by orders.",
+  "CATEGORY_DELETE_HAS_PRODUCTS": "Cannot delete: this category still has products.",
+  "MISSING_QUERY_PARAMETER": "A required query parameter is missing.",
+  "EMPTY_SITE_SETTINGS_ITEMS": "The settings list cannot be empty.",
+  "SITE_SETTING_KEY_NOT_ALLOWED": "This settings group/key is not allowed.",
+  "RESEND_OTP_NOT_SUPPORTED": "Resend OTP is not available for this flow.",
+  "OTP_RESEND_COOLDOWN": "Please wait {{seconds}} seconds before requesting another OTP.",
+  "ORDER_REQUIRES_ITEMS": "The order must contain at least one product.",
+  "ORDER_PRODUCTS_NOT_FOUND": "One or more products were not found.",
+  "MISSING_USERNAME_OR_EMAIL": "Please enter a username or email."
 }

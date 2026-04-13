@@ -1,0 +1,14 @@
+{
+  "title": "Quản trị",
+  "nav": {
+    "orders": "Đơn hàng",
+    "products": "Sản phẩm",
+    "categories": "Danh mục",
+    "banners": "Banner",
+    "settings": "Cấu hình site"
+  },
+  "theme": {
+    "light": "Sáng",
+    "dark": "Tối"
+  }
+}
