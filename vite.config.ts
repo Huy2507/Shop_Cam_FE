@@ -1,7 +1,11 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { defineConfig, loadEnv } from "vite";
 import { ViteMinifyPlugin } from "vite-plugin-minify";
 import tsconfigPaths from "vite-tsconfig-paths";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -21,6 +25,14 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
+    build: {
+      rollupOptions: {
+        input: {
+          main: path.resolve(__dirname, "index.html"),
+          admin: path.resolve(__dirname, "admin.html"),
+        },
+      },
+    },
     plugins: [
       react(),
       tsconfigPaths(),
